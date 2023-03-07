@@ -14,6 +14,7 @@ import { LogoutContext } from './Context/LogoutContext'
 import Login from './Pages/Login/Login'
 import Register from './Pages/Register/Register'
 import Resetpassword from './Pages/Login/Resetpassword/Resetpassword'
+import Wishlist from './Components/Wishlist/Wishlist'
 
 function App() {
 
@@ -37,7 +38,7 @@ function App() {
           <Route path="/login" element={<Login/>} />
           <Route path="/register" element={<Register/>} />
           <Route path="/resetpassword" element={<Resetpassword/>} />
-
+          <Route path="/wishlist" element={<Wishlist/>} />
 
         </Routes>
       </Router>
