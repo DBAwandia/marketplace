@@ -5,10 +5,23 @@ import { MdSupportAgent } from 'react-icons/md'
 import { AiOutlineClose} from 'react-icons/ai'
 import { LogoutContext } from '../../Context/LogoutContext'
 import { RiAdvertisementFill } from 'react-icons/ri'
-
+import { LoginContext } from '../../Context/LoginContext'
+import moment from 'moment';
+import { useNavigate } from 'react-router-dom'
 
 function Logout() {
   const { dispatch } = useContext(LogoutContext)
+  const { user } = useContext(LoginContext)
+  const date = user?.createdAt
+  const dayJoined = moment(date).format("DD/MM/YYYY");
+
+  const navigate = useNavigate()
+
+  const logout = () =>{
+    dispatch({type: "CLOSE"})
+    localStorage.removeItem("user")
+    navigate("/login")
+  }
 
   return (
     <div className='w-[32rem] rounded-xl relative z-[99999999999999999999999999999] text-[gray] text-[2rem] min-h-0 bg-[white]'>
@@ -20,8 +33,8 @@ function Logout() {
     </div>
       <div className='flex flex-col gap-[3rem] py-[2.5rem] px-[4rem]'>
         <div className='flex flex-col gap-[2rem] font-[599] mt-[3.8rem] text-[1.8rem]'> 
-            <h1>Username:   Wandia</h1>
-            <h2 className='items-center'>Registered:    02/05/2023</h2>
+            <h1>Username:  {user?.username}</h1>
+            <h2 className='items-center'>Registered:    {dayJoined}</h2>
         </div>
 
         <div className='flex font-[599] cursor-pointer items-center gap-[1.5rem] hover:text-[#8529cd]'>
@@ -39,7 +52,9 @@ function Logout() {
             <p>Customer support</p>
         </div>
 
-        <div className='flex font-[599] cursor-pointer items-center text-red-400 gap-[1.5rem] hover:text-[red]'>
+        <div 
+            onClick={logout}
+            className='flex font-[599] cursor-pointer items-center text-red-400 gap-[1.5rem] hover:text-[red]'>
             <IoIosLogOut className='text-[3rem]'/>
             <p>Log Out</p>
         </div>
