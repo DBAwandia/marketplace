@@ -1,21 +1,22 @@
 import React, { useState,useEffect,useContext } from 'react'
 import Navbar from "../../Navbar/Navbar"
-// import { datas } from '../../../dummyData/DummyData'
 import  { HiLocationMarker} from "react-icons/hi"
 import { BsBookmark,BsBookmarkCheckFill } from "react-icons/bs"
 import Footer from "../../Footer/Footer"
 import { useLocation, useNavigate } from 'react-router-dom'
 import { axiosInstance } from "../../../Utils/BaseUrl"
-import { LogoutContext } from '../../../Context/LogoutContext'
+import { LoginContext } from "../../../Context/LoginContext"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function AllPhones() {
   const [ isAdded, setIsAdded ] = useState(false)
   const [ posts, setPosts ] = useState([])
+  const [ wishlist, setWishlist ] = useState(null)
   const location = useLocation()
   const name = location.state.toString()
-  const { user } = useContext(LogoutContext)
+  const { user } = useContext(LoginContext)
+  const navigate = useNavigate()
 
   //get all posts
   useEffect(() => {
@@ -26,33 +27,48 @@ function AllPhones() {
     fetchData()
   }, [])
 
+
   // filter posts
   const Search = (posts) =>{
     return posts.filter((item)=>(
       (item?.name === name)
       ))
   }
-  const navigate = useNavigate()
 
   //empty search
   const length = Search(posts).length
 
-  //remove to wishlist
-  const removeWishList = (id)=>{
+  //get Users wishlist
+  useEffect(()=>{
+  let timer =  setInterval(()=>{
+      const getUser = async() =>{
+        const res = await axiosInstance.get(`/Users/getUser/${user?._id}`)
+        setWishlist(res.data.wishList)
+      }
+      getUser()
+    },100)
+    return ()=> clearInterval(timer)
+  },[user])
 
-  }
+
+  //remove to wishlist
+  const removeWishList = async(id)=>{
+      try{
+
+            await axiosInstance.put("/Posts/removeFromWishlist" , {username: user.username , productId: id})
+          }catch(err){}
+      }
 
   //add to wishlist
   const addWishList = async (id)=>{
-    try{
-     const res = await axiosInstance.put("/Posts/addToWishlist" , {username: user.username , productId: id})
-     console.log(res)
-      toast.success("Added to wish list 💚")
-    }catch(err){}
+          try{
+
+            await axiosInstance.put("/Posts/addToWishlist" , {username: user.username , productId: id})
+          }catch(err){}
   }
 
   const purchase = async (id)=>{
-    navigate("/product"+"/4")
+    navigate("/product/"+id)
   }
   
 
@@ -92,23 +108,25 @@ function AllPhones() {
             aria-label='Save'
           >
               <div className='absolute hover:shadow-inner grid items-center justify-center top-[2rem] right-[2rem] bg-white w-[6rem] h-[6rem] rounded-full shadow-2xl'>
-                {/* {!isAdded && <div
-                    onClick={()=>removeWishList(item?.id)}
+                {wishlist?.find((items) => items === item._id) && 
+                <div
+                    onClick={()=>removeWishList(item?._id)}
                 >
                     <BsBookmarkCheckFill  
                       aria-label="Save"
                       className='text-[3rem] text-[#8529cd]'
                     />
-                  </div>} */}
-                  <div
-                   
-                  >
+                  </div>}
+
+                 {wishlist?.find((items) => item._id !== items ) && 
+                 <div>
                   <BsBookmark
-                    onClick={()=>addWishList(item?.id)}
-                      className='text-[3rem] text-[#8529cd]'
+                    onClick={()=>addWishList(item?._id)}
+                      className={wishlist?.find((items) => item._id === items ) ?"hidden text-[3rem] text-[#8529cd]" : "block text-[3rem] text-[#8529cd]"}
                    />
-                  </div>
+                  </div>}
                 </div>
+
             <img
               className='w-[30rem] h-[25rem] object-cover'
               src={item?.image}

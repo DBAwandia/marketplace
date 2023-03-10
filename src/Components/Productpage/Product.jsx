@@ -1,31 +1,48 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { BiMessageDetail } from 'react-icons/bi'
 import { HiLocationMarker } from 'react-icons/hi'
 import { GrClose } from 'react-icons/gr'
 import Navbar from '../Navbar/Navbar'
 import ProductDetail from './ProductDetail'
 import Footer from "../../Components/Footer/Footer"
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { axiosInstance } from '../../Utils/BaseUrl'
+// import { LoginContext } from '../../Context/LoginContext'
 
 function Product() {
-    let data = [
-        {
-            id: 2,
-            image: "https://i0.wp.com/techweez.com/wp-content/uploads/2019/10/TECNO-Camon-12-e1571135186570.jpg?fit=1000%2C750&ssl=1",
-            Title: "HUAWEI",
-            description:"Huawei Honor 6X 5.5 Android 7.0 3GB+32GB 4G Octa Core 2.1GHz Dual Rear Cameras Fingerprint Bluetooth 4.1-SILVER",
-            price: 15,
-            from: 18,
-            percentage: "-45%",
-            itemsleft: 6,
-            location:"Mombasa, kisauni"
-      
-          }
-    ]
     const navigate = useNavigate()
     const [ sellersContact, setSellersContact ] = useState(false)
     const [ sendMessage , setSendMessage ] = useState(false)
+    const [ data, setData ] = useState(null)
+    const productData = [data]
 
+    //product id
+    const location = useLocation()
+
+    //passed as prop at ProductDetails component
+    const itemId = location.pathname.split("/")[2]
+
+    // const { user } = useContext(LoginContext)
+    // const phonenumber = user?.phonenumber
+
+    //GET POST BY ID
+    useEffect(()=>{
+      const fetchData = async() =>{
+        try{
+          const res = await axiosInstance.get(`/Posts/getPost/${itemId}`)
+          setData(res.data)
+        }catch{}
+      }
+      fetchData()
+    },[itemId])
+
+    //Trim description to first 15 letters
+    let description = productData && productData.map((item) => item?.description)
+    let maxLength = 50 // maximum number of characters to extract
+    //trim the string to the maximum length
+    let trimmedString = description[0]?.substr(0, maxLength);
+    console.log(trimmedString)
+    
     //startchat
     const startMessage = ()=>{
       setSendMessage(true)
@@ -45,7 +62,7 @@ function Product() {
 
     //requestCall
     const requestCall = async ()=>{
-
+        alert("success 💚")
     }
   return (
     <div className='w-full bg-[#f5f5f5]'>
@@ -53,9 +70,9 @@ function Product() {
             <Navbar/>
         </div>
     <div className='grid mt-[4rem] items-center justify-center '>
-    {data.map((item)=>(
+    {productData?.map((item)=>(
     <div 
-        key={item?.id}
+        key={item?._id}
         className="bg-[white] h-auto px-[2rem] shadow-2xl py-[2rem] pb-[5rem] flex gap-[4rem] flex-[1]"
     >
       <div className='flex-[0.35]'>
@@ -70,20 +87,21 @@ function Product() {
         <div >
             <div className='flex flex-col gap-[2rem]'>
                   <p className='font-bold text-[#007185] text-[2.5rem]'>
-                    {item?.Title}
+                    {item?.name}
                   </p>
                   <p className='text-[#282828] w-[70rem] font-[555] text-[2.5rem]'>
-                    {item?.description}
+                    {trimmedString + " "}
+                    <span className="text-[1.8rem] text-[#878a8c]">(scrolldown for more details)</span>
                   </p>
                   <span className='text-[#282828] font-extrabold text-[3rem]'>
                     {"$" + Number(item?.price).toFixed(2)}
                   </span>
                 <div className='flex gap-[4rem] items-center text-[2rem] font-semibold'>
                   <p className='line-through decoration-4 decoration-[#8529cd] text-[#6c8ea0]'>
-                    {"$" + item?.from}
+                    {"$" + item?.initialPrice}
                   </p>
                   <span className='bg-[#fef3e9] rounded-lg text-[#f68b1e] text-[1.6rem] py-[0.5rem] px-[1.1rem] font-extrabold'>
-                    {item?.percentage}
+                    {"-" + Number((item?.initialPrice - item?.price)/item?.initialPrice * (100) ).toFixed(2) + "%"}
                   </span>
                 </div>
                 <div className='flex gap-[0.5rem] items-center text-[1.5rem] font-[600] text-[#6c8ea0] '>
@@ -93,22 +111,21 @@ function Product() {
 
                     <div className='w-full border-solid rounded-md border-2 font-bold border-[#772ab3]'>
                         <button 
-                            className="text-[#64179e]  w-full h-[6rem] rounded-md text-[2rem] hover:font-bold hover:font-mono"
+                            className="text-[#64179e]  w-full h-[6rem] rounded-md text-[2rem] hover:font-bold hover:text-[#251135]"
                             onClick={requestCall}
                         >
                             Request callback
                         </button>
                     </div>
-
-                    <p className='text-[gray] font-bold mt-[1rem] text-[2rem]'>
-                      {item?.itemsleft + " "} items left
-                    </p>
-                    <button 
-                        className="bg-[#8529cd] w-full h-[6rem] rounded-md text-[#fff] text-[2rem] hover:bg-[#64179e]"
-                        onClick={handleClick}
-                    >
-                        {!sellersContact ? "Show contact" : "0747770857"}
-                    </button>
+                  
+                    <a href={`tel:${item?.phonenumber}`}>
+                      <button 
+                          className="bg-[#8529cd] w-full h-[6rem] rounded-md text-[#fff] text-[2rem] hover:bg-[#64179e]"
+                          onClick={handleClick}
+                      >
+                          {!sellersContact ? "Show contact" : "254"+item?.phonenumber}
+                      </button>
+                    </a>
                     {sendMessage && 
                     <div className='flex items-center justify-between'>
                     <p className='text-[2rem] font-[555]'>Your message</p>
@@ -148,7 +165,7 @@ function Product() {
       </div>))}
     </div>
     <div>
-      <ProductDetail/>
+      <ProductDetail itemId={itemId}/>
     </div>
     <div>
       <Footer/>
