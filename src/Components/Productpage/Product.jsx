@@ -126,6 +126,7 @@ function Product() {
                           {!sellersContact ? "Show contact" : "254"+item?.phonenumber}
                       </button>
                     </a>
+                    
                     {sendMessage && 
                     <div className='flex items-center justify-between'>
                     <p className='text-[2rem] font-[555]'>Your message</p>

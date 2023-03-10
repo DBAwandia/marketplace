@@ -10,7 +10,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function AllPhones() {
-  const [ isAdded, setIsAdded ] = useState(false)
+  // const [ isAdded, setIsAdded ] = useState(false)
   const [ posts, setPosts ] = useState([])
   const [ wishlist, setWishlist ] = useState(null)
   const location = useLocation()
@@ -71,7 +71,7 @@ function AllPhones() {
     navigate("/product/"+id)
   }
   
-
+console.log(wishlist?.length)
   return (
     <div className='relative w-full min-h-screen flex flex-col gap-[3rem]'>
        <ToastContainer
@@ -119,6 +119,14 @@ function AllPhones() {
                   </div>}
 
                  {wishlist?.find((items) => item._id !== items ) && 
+                 <div>
+                  <BsBookmark
+                    onClick={()=>addWishList(item?._id)}
+                      className={wishlist?.find((items) => item._id === items ) ?"hidden text-[3rem] text-[#8529cd]" : "block text-[3rem] text-[#8529cd]"}
+                   />
+                  </div>}
+
+                  {wishlist?.length === 0 && 
                  <div>
                   <BsBookmark
                     onClick={()=>addWishList(item?._id)}

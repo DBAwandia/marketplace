@@ -48,7 +48,12 @@ function Navbar() {
             <HiOutlineLocationMarker className='text-[3rem]'/>
             <p>Kenya</p>
         </div>
-        <div className='flex items-center text-[2rem] gap-[1rem] hover:text-[#b9b6b6]'>
+        <div 
+            onClick={()=>{
+              navigate("/wishlist")
+            }}
+            className='flex items-center text-[2rem] gap-[1rem] hover:text-[#b9b6b6]'
+        >
             <BsBookmarkFill className='text-[3rem]'/>
             <p>Wishlist</p>
         </div>
