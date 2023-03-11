@@ -14,15 +14,23 @@ function AllPhones() {
   const [ posts, setPosts ] = useState([])
   const [ wishlist, setWishlist ] = useState(null)
   const location = useLocation()
-  const name = location.state.toString()
+  const name = location.state?.toString()
   const { user } = useContext(LoginContext)
   const navigate = useNavigate()
 
   //get all posts
   useEffect(() => {
     const fetchData = async()=>{
+      // setPosts(JSON.parse(localStorage.getItem("getPost")))
+      try{
         const res = await axiosInstance.get("/Posts/getallposts")
+        // localStorage.setItem("getPost" ,JSON.stringify(res.data))
         setPosts(res.data)
+      }catch(err){
+        // setPosts(JSON.parse(localStorage.getItem("getPost")))
+
+      }
+        
     }
     fetchData()
   }, [])
@@ -36,20 +44,25 @@ function AllPhones() {
   }
 
   //empty search
-  const length = Search(posts).length
+  const length = Search(posts)?.length
 
   //get Users wishlist
   useEffect(()=>{
   let timer =  setInterval(()=>{
       const getUser = async() =>{
-        const res = await axiosInstance.get(`/Users/getUser/${user?._id}`)
-        setWishlist(res.data.wishList)
+        // setWishlist(JSON.parse(localStorage.getItem("getUWishlistarray")))
+        try{
+          const res = await axiosInstance.get(`/Users/getUser/${user?._id}`)
+          // localStorage.setItem("getUWishlistarray" ,JSON.stringify(res?.data))
+          setWishlist(res.data.wishList)
+        }catch(err){
+          // setWishlist(JSON.parse(localStorage.getItem("getUWishlistarray")))
+        }
       }
       getUser()
     },100)
     return ()=> clearInterval(timer)
   },[user])
-
 
   //remove to wishlist
   const removeWishList = async(id)=>{
@@ -71,7 +84,6 @@ function AllPhones() {
     navigate("/product/"+id)
   }
   
-console.log(wishlist?.length)
   return (
     <div className='relative w-full min-h-screen flex flex-col gap-[3rem]'>
        <ToastContainer
@@ -129,7 +141,7 @@ console.log(wishlist?.length)
                   {wishlist?.length === 0 && 
                  <div>
                   <BsBookmark
-                    onClick={()=>addWishList(item?._id)}
+                      onClick={()=>addWishList(item?._id)}
                       className={wishlist?.find((items) => item._id === items ) ?"hidden text-[3rem] text-[#8529cd]" : "block text-[3rem] text-[#8529cd]"}
                    />
                   </div>}
@@ -150,11 +162,11 @@ console.log(wishlist?.length)
                 {"$" + item?.price}
               </span>
             <div className='flex gap-[4rem] items-center '>
-              <p className='line-through decoration-4 decoration-[red] text-[#6c8ea0]'>
+              <p className='line-through decoration-4 decoration-[#8142bb] text-[#6c8ea0]'>
                 {"$" + item?.initialPrice}
               </p>
               <span className='bg-[#fef3e9] rounded-lg text-[#f68b1e] text-[1.6rem] py-[0.5rem] px-[1.1rem] font-extrabold'>
-                {item?.percentage}
+                {"-" + Number((item?.initialPrice - item?.price)/item?.initialPrice * (100) ).toFixed(2) + "%"}
               </span>
             </div>
             <div className='flex gap-[0.5rem] items-center text-[1.5rem] font-[600] text-[#6c8ea0] '>

@@ -3,7 +3,7 @@ import Navbar from "../Navbar/Navbar"
 import Footer from "../Footer/Footer"
 import { LoginContext } from '../../Context/LoginContext'
 import { axiosInstance } from '../../Utils/BaseUrl'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 
 function Wishlist() {
@@ -17,16 +17,20 @@ function Wishlist() {
     //fetch wishlist items
     useEffect(()=>{
         const fetchData = async() =>{
+            // setData(JSON.parse(localStorage.getItem("fetchWishItems")))
             try{
                 const res = await axiosInstance.get(`/Posts/wishlistItems?QUERY=${username}`)
+                // localStorage.setItem("fetchWishItems" ,JSON.stringify(res.data))
                 setData(res.data)
 
             }catch(err){
+                // setData(JSON.parse(localStorage.getItem("fetchWishItems")))
 
             }
         }
         fetchData()
     },[username])
+
 
     //Navigate to product page
     const handleClick = async (id) =>{
@@ -50,10 +54,17 @@ function Wishlist() {
                 <div className='w-full text-center py-[2rem] text-[3rem]  font-bold text-[black]  border-b-2 border-[#dae2e7]'>
                     <h1>My wishlist items  😊💚</h1>
                 </div>
-           {data?.map((item)=>( 
+           {data?.length < 1 ? 
+            <div className='w-full h-[calc(100vh-40vh)] grid items-center justify-center cursor-default'>
+                <Link to="/">
+                    <h2 className='text-[3rem] font-extrabold text-[#6c8ea0]'>No items found ,Continue searching</h2>
+                </Link>
+            </div>
+            :
+            data?.map((item)=>( 
             <div 
                     key={item._id} 
-                    className='relative flex border-b-2 border-[#ebf2f7] items-center gap-[2.6rem] flex-[1] p-[3rem] hover:bg-[#f6f9fc]'
+                    className='relative flex border-b-2 border-[#d8e5ee] items-center gap-[2.6rem] flex-[1] p-[3rem] hover:bg-[#f6f9fc]'
 
                 >
                 <div 
