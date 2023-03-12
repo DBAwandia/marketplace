@@ -38,12 +38,8 @@ function Wishlist() {
     }
 
 
-    //Trim description to first 15 letters
-    // let description = data && data?.map((item) => item?.description)
-    // let maxLength = 50 // maximum number of characters to extract
-    // // //trim the string to the maximum length
-    // let trimmedString = description[0]?.substr(0, maxLength);
-    // console.log(trimmedString)
+    let description = data && data?.map((item) => item?.description)
+
 
   return (
     <div className='relative w-full min-h-screen bg-[#ebf2f7]'>
@@ -80,7 +76,9 @@ function Wishlist() {
                 </div>
                 <div className='flex flex-col gap-[2rem] flex-[0.6]'>
                     <h2 className='font-bold'>{item?.name}</h2>
-                    {/* <p className='font-[599]'>{item?.description}</p> */}
+                    <p className='font-[599]'>                
+                        {description[0]?.substr(0, 60)}
+                    </p>
                     <p className='font-extrabold text-[#00b53f] text-[2.3rem]'>{"KSH" + " " + item?.price}</p>
                     <p className='text-[#6c8ea0] line-through'>{"KSH" + " " + item?.initialPrice}</p>
                     <span className='text-[#6c8ea0]'>{item?.location}</span>
