@@ -1,5 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { BrowserRouter as Router,Routes,Route } from 'react-router-dom'
+import 'animate.css';
+import { LogoutContext } from './Context/LogoutContext'
 import Home from './Components/Home/Home'
 import AllFlashSale from "./Components/Allcategories/AllFlashSale/AllFlashSale"
 import AllBestSellers from './Components/Allcategories/AllBestSellers/AllBestSellers'
@@ -9,12 +11,12 @@ import Product from './Components/Productpage/Product'
 import Messagechat from './Pages/Messagechat/Messagechat'
 import PostAd from './Pages/PostAd/PostAd'
 import Logout from './Pages/Logout/Logout'
-import 'animate.css';
-import { LogoutContext } from './Context/LogoutContext'
 import Login from './Pages/Login/Login'
 import Register from './Pages/Register/Register'
 import Resetpassword from './Pages/Login/Resetpassword/Resetpassword'
 import Wishlist from './Components/Wishlist/Wishlist'
+import SearchFilter from './Components/Allcategories/FetchEveryThing/SearchFilter'
+import MyPostAds from './Pages/MyPostAds/MyPostAds'
 
 function App() {
 
@@ -32,6 +34,7 @@ function App() {
           <Route path="/bestsale" element={<AllBestSellers/>} />
           <Route path="/newsale" element={<AllNewArrivals/>} />
           <Route path="/all" element={<AllPhones/>} />
+          <Route path="/search" element={<SearchFilter/>} />
           <Route path="/product/:id" element={<Product/>} />
           <Route path="/chat" element={<Messagechat/>} />
           <Route path="/post" element={<PostAd/>} />
@@ -39,6 +42,7 @@ function App() {
           <Route path="/register" element={<Register/>} />
           <Route path="/resetpassword" element={<Resetpassword/>} />
           <Route path="/wishlist" element={<Wishlist/>} />
+          <Route path="/mypostad" element={<MyPostAds/>} />
 
         </Routes>
       </Router>

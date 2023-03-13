@@ -41,7 +41,6 @@ function Product() {
     let maxLength = 50 // maximum number of characters to extract
     //trim the string to the maximum length
     let trimmedString = description[0]?.substr(0, maxLength);
-    console.log(trimmedString)
     
     //startchat
     const startMessage = ()=>{

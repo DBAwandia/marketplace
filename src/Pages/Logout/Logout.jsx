@@ -37,7 +37,14 @@ function Logout() {
             <h2 className='items-center'>Registered:    {dayJoined}</h2>
         </div>
 
-        <div className='flex font-[599] cursor-pointer items-center gap-[1.5rem] hover:text-[#8529cd]'>
+        <div 
+            onClick={()=>{
+              navigate("/mypostad")
+              dispatch({type: "CLOSE"})
+
+            }}
+            className='flex font-[599] cursor-pointer items-center gap-[1.5rem] hover:text-[#8529cd]'
+        >
             <RiAdvertisementFill className='text-[3rem]'/>
             <p>My posts</p>
         </div>

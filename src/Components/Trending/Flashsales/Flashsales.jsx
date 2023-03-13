@@ -1,17 +1,46 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import  { ImPriceTag } from "react-icons/im"
 import  { MdKeyboardArrowRight} from "react-icons/md"
 import  { HiLocationMarker} from "react-icons/hi"
-import { data } from '../../../dummyData/DummyData'
+// import { data } from '../../../dummyData/DummyData'
 import { useNavigate } from 'react-router-dom'
+import { axiosInstance } from '../../../Utils/BaseUrl'
 
 function Flashsales() {
   const [ isAdded, setIsAdded ] = useState(false)
+  const [ posts, setPosts ] = useState(null)
+
   const navigate = useNavigate()
+
+  //get all posts
+  useEffect(() => {
+    const fetchData = async()=>{
+      // setPosts(JSON.parse(localStorage.getItem("getPost")))
+      try{
+        const res = await axiosInstance.get("/Posts/getallposts")
+        // localStorage.setItem("getPost" ,JSON.stringify(res.data))
+        setPosts(res.data)
+      }catch(err){
+        // setPosts(JSON.parse(localStorage.getItem("getPost")))
+
+      }
+        
+    }
+    fetchData()
+  }, [])
+
+  let description = posts && posts.map((item) => item?.description)
+
+
   const handleClick = async ()=>{
     navigate("/product"+"/4")
   }
   
+
+  //FILTER FETCH TO 4 ITEMS
+  let limited = posts?.filter((val,i)=>i<4)
+  console.log(limited,posts)
+
   return (
     <div className='w-full min-h-[40rem] bg-white shadow-2xl rounded-2xl'>
         <div className='w-full flex flex-col gap-[0.5rem]'>
@@ -42,7 +71,7 @@ function Flashsales() {
             </div>
 
             <div className='flex items-center justify-between py-[2rem] px-[2rem] cursor-pointer'>
-             {data?.map((item)=>(
+             {limited?.map((item)=>(
 
               <div 
                 key={item?.id}
@@ -56,17 +85,17 @@ function Flashsales() {
                   alt="phonesfarm phone"
                 />
                   <p className='font-bold text-[#007185]'>
-                    {item?.Title}
+                    {item?.name}
                   </p>
                   <p className='text-[#6c8ea0] w-[30rem] text-[1.5rem] font-[500]'>
-                    {item?.description}
+                    {description[0]?.substr(0, 60)}
                   </p>
                   <span className='text-[#282828] font-extrabold text-[3rem]'>
                     {"$" + item?.price}
                   </span>
                 <div className='flex gap-[4rem] items-center '>
                   <p className='line-through decoration-4 decoration-[#8529cd] text-[#6c8ea0]'>
-                    {"$" + item?.from}
+                    {"$" + item?.initialPrice}
                   </p>
                   <span className='bg-[#fef3e9] rounded-lg text-[#f68b1e] text-[1.6rem] py-[0.5rem] px-[1.1rem] font-extrabold'>
                     {item?.percentage}
@@ -76,9 +105,7 @@ function Flashsales() {
                   <HiLocationMarker className=""/>
                   <p>{item?.location}</p>
                 </div>
-                  <p className='text-[gray] font-bold mt-[1rem]'>
-                    {item?.itemsleft + " "} items left
-                  </p>
+                 
               </div>
               ))}
             </div>

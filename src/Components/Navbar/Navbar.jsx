@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext,useState,useEffect } from 'react'
 import { HiOutlineLocationMarker } from "react-icons/hi"
 import { BsBookmarkFill } from "react-icons/bs"
 import { VscAccount } from "react-icons/vsc"
@@ -11,7 +11,9 @@ import { LogoutContext } from '../../Context/LogoutContext'
 function Navbar() {
   const navigate = useNavigate()
   const { dispatch } = useContext(LogoutContext)
-
+  const [ search, setSearch ] = useState(null)
+  const [ localStorageSearch, setLocalSorageSearch ] = useState("Nokia")
+  
 
   //start chat
   const navigateToChat = ()=>{
@@ -22,6 +24,21 @@ function Navbar() {
   const postAd = ()=>{
     navigate("/post")
   }
+
+  useEffect(() => {
+    const searchs = localStorage.getItem("search") && localStorage.getItem("search") ? localStorage.getItem("search") : "Nokia"
+    setLocalSorageSearch(searchs)
+  }, [search])
+
+  console.log(setLocalSorageSearch)
+  //SEARCH ITEMS
+  const handleSubmit = async(e) =>{
+    e.preventDefault()
+    localStorage.setItem("search" , search)
+    navigate("/search" , { state: search })
+
+  }
+
   return (
     <div className='flex items-center justify-between w-full h-[12rem] bg-[#8529cd] px-[3rem] text-[#fff] shadow-xl'>
 
@@ -36,10 +53,16 @@ function Navbar() {
       <div className='relative w-[40%] bg-red-900 h-[5.3rem]'>
         <input 
             className='w-full h-full rounded-lg text-[2rem] px-[4rem] text-[gray]'
+            id="submit"
             type="text" 
-            placeholder='Search phone...' 
+            placeholder={localStorageSearch && localStorageSearch ? `${localStorageSearch}` : "Search phone..."}
+            onChange={(e)=>setSearch(e.target.value.toLowerCase())}
         />
-        <div className='absolute right-[3rem] text-[3rem] top-[1.3rem] text-[#8529cd]'>
+        <div 
+          onClick={handleSubmit}
+          id="submit"
+          className='absolute right-[3rem] text-[3rem] top-[1.3rem] text-[#8529cd] cursor-pointer'
+        >
             <BiSearchAlt2/>
         </div>
       </div>
