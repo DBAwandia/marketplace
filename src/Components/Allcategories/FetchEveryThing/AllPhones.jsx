@@ -35,6 +35,8 @@ function AllPhones() {
     fetchData()
   }, [])
 
+  console.log(posts)
+
 
   // filter posts
   const Search = (posts) =>{
@@ -80,6 +82,7 @@ function AllPhones() {
           }catch(err){}
   }
 
+  //Navigate
   const purchase = async (id)=>{
     navigate("/product/"+id)
   }
@@ -173,13 +176,12 @@ function AllPhones() {
               <HiLocationMarker className=""/>
               <p>{item?.location}</p>
             </div>
-              <p className='text-[gray] font-bold mt-[1rem]'>
-                {item?.itemsAvailable + " "} items left
-              </p>
               <button 
+                disabled={item?.soldOut}
                 onClick={()=>purchase(item?._id)}
-                className={item?.itemsAvailable === 0 ?"bg-[#fce9e9] h-[6rem] font-bold rounded-md text-[#ef4444] hover:cursor-[not-allowed]":"bg-[#8529cd] h-[6rem] rounded-md text-[#fff] hover:bg-[#64179e]"}>
-                {item?.itemsAvailable === 0 ? "Sold out" : "Purchase"}
+                className={item?.soldOut ?"bg-[#fce9e9] h-[6rem] font-bold rounded-md text-[#ef4444] hover:cursor-[not-allowed]":"bg-[#8529cd] h-[6rem] rounded-md text-[#fff] hover:bg-[#64179e]"}
+              >
+                {item?.soldOut ? "Sold out" : "Purchase"}
               </button>
             </div>
           ))}

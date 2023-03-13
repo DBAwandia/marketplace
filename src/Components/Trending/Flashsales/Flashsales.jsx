@@ -31,7 +31,6 @@ function Flashsales() {
 
   let description = posts && posts.map((item) => item?.description)
 
-
   const handleClick = async (id)=>{
     navigate("/product/" +id)
   }
@@ -52,9 +51,10 @@ function Flashsales() {
                 </div>
                 <div>
                   <p>
-                    Time Left: 13h : 32m : 50s
+                    Time Left: {JSON.parse(localStorage.getItem("timer"))}
                   </p>
                 </div>
+                
                 <div  className='flex items-center gap-[2rem] cursor-pointer hover:text-[lightgray]'
                   onClick={()=>{
                     navigate("/flashsale")
@@ -74,10 +74,19 @@ function Flashsales() {
 
               <div 
                 key={item?._id}
-                className='flex flex-col gap-[0.7rem] text-[2rem] border-2 hover:shadow-2xl hover:border-0 px-[2.5rem] py-[1.5rem]'
+                className='flex relative flex-col gap-[0.7rem] text-[2rem] border-2 hover:shadow-2xl hover:border-0 px-[2.5rem] py-[1.5rem]'
                 aria-label='Save'
-                onClick={()=>handleClick(item?._id)}
+                onClick={item?.soldOut ?()=>{
+                                     navigate("/flashsale")
+                                    } 
+                                    : 
+                                    ()=>handleClick(item?._id) 
+                              }
               >
+                {item?.soldOut && <div className='border-2 px-[1.5rem] absolute text-[2.3rem] rounded-lg font-bold bottom-[1.5rem] font-[ "Noto Sans"] right-[2.5rem] text-[#ef4444]'>
+                  <h2>Sold Out</h2>
+                </div>}
+
                 <img
                   className='w-[30rem] h-[25rem] object-cover'
                   src={item?.image}

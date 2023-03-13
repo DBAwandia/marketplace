@@ -9,7 +9,7 @@ import { axiosInstance } from '../../../Utils/BaseUrl'
 import { LoginContext } from '../../../Context/LoginContext'
 
 function Allcategories() {
-  const [ isAdded, setIsAdded ] = useState(false)
+  const [countdown, setCountdown] = useState({ hours: 24, minutes: 0, seconds: 0 });
   const [ data, setData ] = useState(null)
   const [ wishlist, setWishlist ] = useState(null)
   const { user } = useContext(LoginContext)
@@ -64,11 +64,40 @@ function Allcategories() {
             }catch(err){}
     }
   
-  const handleClick = async (id)=>{
+  // navigate
+  const purchase = async (id)=>{
     navigate(`/product/${id}`)
+
   }
 
-  
+  //TIMER
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCountdown(prevCountdown => {
+        const { hours, minutes, seconds } = prevCountdown;
+
+        // Calculate the total remaining time in seconds
+        let remainingSeconds = hours * 60 * 60 + minutes * 60 + seconds - 1;
+
+        // Calculate the new hours, minutes, and seconds
+        const newHours = Math.floor(remainingSeconds / (60 * 60));
+        remainingSeconds -= newHours * 60 * 60;
+        const newMinutes = Math.floor(remainingSeconds / 60);
+        remainingSeconds -= newMinutes * 60;
+        const newSeconds = remainingSeconds;
+
+        return { hours: newHours, minutes: newMinutes, seconds: newSeconds };
+      });
+    }, 1000);
+
+    // Clear the interval when the component is unmounted
+    return () => clearInterval(interval);
+  }, []);
+
+  const formattedCountdown = `${countdown.hours.toString().padStart(2, '0')}h ${countdown.minutes.toString().padStart(2, '0')}m ${countdown.seconds.toString().padStart(2, '0')}s`;
+  localStorage.setItem("timer" , JSON.stringify(formattedCountdown))
+
+
   let description = data && data?.map((item) => item?.description)
   
   return (
@@ -84,7 +113,7 @@ function Allcategories() {
           </div>
         <div className='text-[2rem] px-[5rem] py-[2rem] text-[#75757a]'>
           <p>
-            Time Left: 13h : 32m : 50s
+            Time Left:    {JSON.parse(localStorage.getItem("timer"))} 
           </p>
         </div>
         <div className='grid grid-cols-4 gap-[2rem] py-[2rem] px-[2rem] cursor-pointer'>
@@ -152,10 +181,11 @@ function Allcategories() {
             </div>
               
               <button 
-                onClick={()=>handleClick(item._id)}
-                className={item?.itemsleft === 0 ?"bg-[#fce9e9] h-[6rem] font-bold rounded-md text-[#ef4444] hover:cursor-[not-allowed]":"bg-[#8529cd] h-[6rem] rounded-md text-[#fff] hover:bg-[#64179e]"}
+                disabled={item?.soldOut}
+                onClick={()=>purchase(item?._id)}
+                className={item?.soldOut?"bg-[#fce9e9] h-[6rem] font-bold rounded-md text-[#ef4444] hover:cursor-[not-allowed]":"bg-[#8529cd] h-[6rem] rounded-md text-[#fff] hover:bg-[#64179e]"}
               >
-                {item?.itemsleft === 0 ? "Sold out" : "Purchase"}
+                {item?.soldOut? "Sold out" : "Purchase"}
               </button>
             </div>
           ))}

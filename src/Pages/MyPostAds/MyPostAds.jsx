@@ -39,17 +39,21 @@ function MyPostAds() {
         }catch(err){}
     }
 
+    // MARK AS SOLD ITEM
+    const handleSold = async(id)=>{
+        try{
+            await axiosInstance.put(`/Posts/soldout/${id}`)
+            alert("Successfully updated")
+            navigate("/")
+        }catch(err){
+            
+        }
+    }
 
     // REDIRECT TO EDIT PAGE
     const handleEdit = async (id) =>{
         navigate("/editad" , {state: id})
     }
-
-    //Navigate to product page
-    const handleClick = async (id) =>{
-        navigate(`/product/${id}`)
-    }
-
 
     let description = data && data?.map((item) => item?.description)
 
@@ -77,7 +81,6 @@ function MyPostAds() {
 
                 >
                 <div 
-                 onClick={()=>handleClick(item?._id)}
                  className='relative flex cursor-default  border-[#ebf2f7] items-center gap-[2.6rem] flex-[1] p-[3rem] hover:bg-[#f6f9fc]'
                 >
                 <div className='flex-[0.4]'>
@@ -99,19 +102,27 @@ function MyPostAds() {
                
                 </div>
                 <div className='flex flex-col gap-[2rem] right-[2rem] bottom-[2rem] absolute'>
-                    <div className='rounded-lg  text-[#262930] w-[10rem] h-[5rem] '>
+                    <div className='rounded-lg  text-[#262930] w-[15rem] h-[5rem] '>
                         <button 
                             onClick={()=>handleDelete(item?._id)}
-                            className='bg-[#f0c2c2] rounded-lg  w-[10rem] h-[5rem]'
+                            className='bg-[#f0c2c2] rounded-lg  w-[15rem] h-[5rem]'
                         >
                             Delete
                         </button>
                     </div>
                     <button 
+                        disabled={item?.soldOut}
                         onClick={()=>handleEdit(item?._id)}
-                        className='border-[#00b53f] rounded-lg w-[10rem] h-[5rem] bg-[#00b53f] text-[white]'
+                        className='border-[#00b53f] rounded-lg w-[15rem] h-[5rem] bg-[#52a872] text-[white]'
                     >
                             Edit
+                    </button>
+                    <button 
+                        disabled={item?.soldOut}
+                        onClick={()=>handleSold(item?._id)}
+                        className='border-[#00b53f] rounded-lg w-[15rem] h-[5rem] bg-[#00b53f] text-[white]'
+                    >
+                            {item?.soldOut ? "Inactive" : "Mark sold"}
                     </button>
                 </div>
             </div>))}
