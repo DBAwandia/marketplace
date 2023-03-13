@@ -32,14 +32,13 @@ function Flashsales() {
   let description = posts && posts.map((item) => item?.description)
 
 
-  const handleClick = async ()=>{
-    navigate("/product"+"/4")
+  const handleClick = async (id)=>{
+    navigate("/product/" +id)
   }
   
 
   //FILTER FETCH TO 4 ITEMS
   let limited = posts?.filter((val,i)=>i<4)
-  console.log(limited,posts)
 
   return (
     <div className='w-full min-h-[40rem] bg-white shadow-2xl rounded-2xl'>
@@ -74,10 +73,10 @@ function Flashsales() {
              {limited?.map((item)=>(
 
               <div 
-                key={item?.id}
+                key={item?._id}
                 className='flex flex-col gap-[0.7rem] text-[2rem] border-2 hover:shadow-2xl hover:border-0 px-[2.5rem] py-[1.5rem]'
                 aria-label='Save'
-                onClick={handleClick}
+                onClick={()=>handleClick(item?._id)}
               >
                 <img
                   className='w-[30rem] h-[25rem] object-cover'

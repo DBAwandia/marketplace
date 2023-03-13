@@ -10,8 +10,6 @@ function MyPostAds() {
     const [ data, setData ] = useState(null)
 
     const { user } = useContext(LoginContext)
-
-    console.log(user.posts)
     const username = user?.username
 
     const navigate = useNavigate()
@@ -21,7 +19,7 @@ function MyPostAds() {
         const fetchData = async() =>{
             // setData(JSON.parse(localStorage.getItem("fetchWishItems")))
             try{
-                const res = await axiosInstance.get(`/Posts/wishlistItems?QUERY=${username}`)
+                const res = await axiosInstance.get(`/Posts/getpost?QUERY=${username}`)
                 // localStorage.setItem("fetchWishItems" ,JSON.stringify(res.data))
                 setData(res.data)
 
@@ -33,6 +31,19 @@ function MyPostAds() {
         fetchData()
     },[username])
 
+    //DELETE POST
+    const handleDelete = async(id)=>{
+        try{
+            await axiosInstance.put(`/Posts/delete/${id}` , {username: username})
+            setData(data?.filter((item) => item?._id !== id))
+        }catch(err){}
+    }
+
+
+    // REDIRECT TO EDIT PAGE
+    const handleEdit = async (id) =>{
+        navigate("/editad" , {state: id})
+    }
 
     //Navigate to product page
     const handleClick = async (id) =>{
@@ -50,7 +61,7 @@ function MyPostAds() {
         </div>
         <div className='min-h-0 m-auto w-[60%] mt-[5rem] mb-[5rem] pt-[3rem] flex flex-col gap-[3rem] items-center text-[2rem] bg-[#ffffff] border-2 rounded-2xl shadow-2xl'>
                 <div className='w-full text-center py-[2rem] text-[3rem]  font-bold text-[black]  border-b-2 border-[#dae2e7]'>
-                    <h1>My ADs   😊💚</h1>
+                    <h1>My ADs   😊💚   ( {" " +data?.length} )</h1>
                 </div>
            {data?.length < 1 ? 
             <div className='w-full h-[calc(100vh-40vh)] grid items-center justify-center cursor-default'>
@@ -61,7 +72,7 @@ function MyPostAds() {
             :
             data?.map((item)=>( 
             <div 
-                    key={item._id} 
+                    key={item?._id} 
                     className='relative flex border-b-2 border-[#d8e5ee] items-center gap-[2.6rem] flex-[1] p-[3rem] hover:bg-[#f6f9fc]'
 
                 >
@@ -88,17 +99,19 @@ function MyPostAds() {
                
                 </div>
                 <div className='flex flex-col gap-[2rem] right-[2rem] bottom-[2rem] absolute'>
-                    <div className='border-2 rounded-lg border-[#00b53f] hover:border-[#1bd462] w-[20rem] h-[6rem] '>
-                        <button onClick={()=>{
-                            navigate("/chat")
-                        }} className='border-[#00b53f] w-[20rem] h-[6rem]'>
-                            Chat
+                    <div className='rounded-lg  text-[#262930] w-[10rem] h-[5rem] '>
+                        <button 
+                            onClick={()=>handleDelete(item?._id)}
+                            className='bg-[#f0c2c2] rounded-lg  w-[10rem] h-[5rem]'
+                        >
+                            Delete
                         </button>
                     </div>
-                    <button className='border-[#00b53f] rounded-lg w-[20rem] h-[6rem] bg-[#00b53f] text-[white]'>
-                        <a href={`tel: 254${item?.phonenumber}`}>
-                            Call seller
-                        </a>
+                    <button 
+                        onClick={()=>handleEdit(item?._id)}
+                        className='border-[#00b53f] rounded-lg w-[10rem] h-[5rem] bg-[#00b53f] text-[white]'
+                    >
+                            Edit
                     </button>
                 </div>
             </div>))}

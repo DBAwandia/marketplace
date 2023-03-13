@@ -1,24 +1,26 @@
+import React, { useContext, useState,useEffect } from 'react'
 import axios from 'axios'
-import React, { useContext, useState } from 'react'
 import { IoMdAdd } from 'react-icons/io'
 import Navbar from '../../Components/Navbar/Navbar'
 import { LoginContext } from '../../Context/LoginContext'
 import { axiosInstance } from '../../Utils/BaseUrl'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Footer from "../../Components/Footer/Footer"
 
-function PostAd() {
-    const [ name , setName ] = useState("")
-    const [ features , setFeatures ] = useState("")
-    const [ description , setDescription ] = useState("")
-    const [ price , setPrice ] = useState("")
-    const [ initialPrice , setInitialPrice ] = useState("")
-    const [ images , setImages ] = useState("")
-    const [ location , setLocation ] = useState("")
+function EditAd() {
+    const [ names , setName ] = useState("")
+    const [ featuress , setFeatures ] = useState("")
+    const [ descriptions , setDescription ] = useState("")
+    const [ prices , setPrice ] = useState("")
+    const [ initialPrices , setInitialPrice ] = useState("")
+    const [ imagess , setImages ] = useState("")
+    const [ locations , setLocation ] = useState("")
     const [ loading , setLoading ] = useState(false)
-    const [ error , setError ] = useState(false)
+    const [ imageFiles , setImageFile ] = useState(null)
+    const [ data , setData ] = useState(null)
+    const datas = [ data ]
 
     
     const navigate = useNavigate()
@@ -28,42 +30,45 @@ function PostAd() {
     const phonenumber = user?.phonenumber
     const username = user?.username
 
+    const locationss = useLocation()
+    const postID = locationss.state
 
-    //POST AD
+    //FETCH POST DETAILS
+    useEffect(() => {
+        const fetchData = async() =>{
+            try{
+                const res = await axiosInstance.get(`/Posts/getPost/${postID}`)
+                setData(res.data)
+            }catch(err){}
+        }
+        fetchData()
+    }, [])
+
+    console.log(data)
+
+    //Edit POST AD
     const handleClick = async (e) =>{
         e.preventDefault()
         setLoading(true)
-        if(
-            name.length < 1 || 
-            features.length < 1 ||
-            price.length < 1 ||
-            description.length < 1 ||
-            initialPrice.length < 1 ||
-            location.length < 1 ||
-            images.length < 1 
-        ){
-            setError(true)
-            setLoading(false)
-        }else{
             try{
                 //CLOUDINARY
                 const data  = new FormData()
-                data.append("file", images)
-                data.append("upload_preset", "wandia")
-                const res = await axios.post("https://api.cloudinary.com/v1_1/wandia/image/upload" , data)
-                const imageUpload = res?.data.url
-
+                if(imagess.length !== 0){
+                    data.append("file", imagess)
+                    data.append("upload_preset", "wandia")
+                    const res = await axios.post("https://api.cloudinary.com/v1_1/wandia/image/upload" , data)
+                    const imageUpload = res?.data.url
+                    setImageFile(imageUpload)
+                }
                 //post to database
-                await axiosInstance.post("/Posts/post" , {
-                            image:imageUpload,
-                            location ,
-                            name,
-                            phonenumber, 
-                            features,
-                            description,
-                            price,
-                            initialPrice,
-                            username
+                await axiosInstance.put(`/Posts/edit/${postID}` , {
+                            image:imageFiles,
+                            location : locations ,
+                            name: names,
+                            features: featuress,
+                            description: descriptions,
+                            price: prices,
+                            initialPrice: initialPrices,
                         })
                 toast.success("Successfully updated")
                 setLoading(false)
@@ -75,7 +80,6 @@ function PostAd() {
                 setLoading(false)
                 toast.warn("Check internet connection")
             }
-        }
     }
 
    
@@ -89,31 +93,24 @@ function PostAd() {
             </div>
 
             <ToastContainer
-            position="bottom-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-        />
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
 
-            <div className='w-[70%] flex flex-col gap-[5rem] self-center px-[5rem] py-[5rem] bg-[white]'>
-                <div className='w-full flex items-center justify-between border-b-2'>
-                    <h1 className='text-[4rem] font-extrabold'>Post ad</h1>
-                    <span className='text-[#fc2533] cursor-pointer text-[2rem]'>Clear</span>
-                </div>
-            <div className='flex flex-col gap-[4rem]'>
-                {error && name.length< 1 ? <p className='self-center text-[#ef4444] text-[2rem]'>Phonename is required</p> : ""}
-                {error && features.length< 1 ? <p className='self-center text-[#ef4444] text-[2rem]'>Features is required</p> : ""}
-               {error && price.length< 1 ? <p className='self-center text-[#ef4444] text-[2rem]'>Price is required</p> : ""}
-                {error && initialPrice.length< 1 ? <p className='self-center text-[#ef4444] text-[2rem]'>InitialPrice is required</p> : ""}
-               {error && description.length< 1 ? <p className='self-center text-[#ef4444] text-[2rem]'>Description is required</p> : ""}
-                {error && location.length< 1 ? <p className='self-center text-[#ef4444] text-[2rem]'>Location is required</p> : ""}
-                {error && images.length< 1 ? <p className='self-center text-[#ef4444] text-[2rem]'>Image is required</p> : ""}
-
+           {datas?.map((item)=>( 
+            <div key={item?._id} className='w-[70%] flex flex-col gap-[5rem] self-center px-[5rem] py-[5rem] bg-[white]'>
+                    <div className='w-full flex items-center justify-between border-b-2'>
+                        <h1 className='text-[4rem] font-extrabold'>Edit your ad</h1>
+                        <span className='text-[#fc2533] cursor-pointer text-[2rem]'>Back</span>
+                    </div>
+              <div className='flex flex-col gap-[4rem]'>
                 <div className='w-full items-center flex gap-[1rem] text-[2rem]'>
                     <div className='w-full flex flex-col gap-[1rem] text-[2rem]'>
                         <label className='font-bold text-[2.2rem] text-decorate'>Phone name</label>
@@ -121,7 +118,7 @@ function PostAd() {
                             onChange={(e)=>setName(e.target.value)}
                             className='bg-[#f6f7f8] w-auto h-[6rem] rounded-lg pl-[3rem]'
                             type="text"
-                            placeholder='Techno'
+                            placeholder={item?.name}
                         />
                     </div>
                     <div className='w-full flex flex-col gap-[1rem] text-[2rem]'>
@@ -130,7 +127,7 @@ function PostAd() {
                                 onChange={(e)=>setFeatures(e.target.value)}
                                 className='bg-[#f6f7f8] w-auto h-[6rem] rounded-lg pl-[3rem]'
                                 type="text"
-                                placeholder='Ram , Rom , Camera'
+                                placeholder={item?.features}
                         />
                     </div>
                 </div>
@@ -143,7 +140,7 @@ function PostAd() {
                                 className='bg-[#f6f7f8] w-auto h-[6rem] rounded-lg pl-[3rem]'
                                 type="Number"
                                 min={1}
-                                placeholder='Price after discount'
+                                placeholder={item?.price}
                         />
                    </div>
                     <div className='w-full flex flex-col gap-[1rem] text-[2rem]'>
@@ -153,7 +150,7 @@ function PostAd() {
                                 className='bg-[#f6f7f8] w-auto h-[6rem] rounded-lg pl-[3rem]'
                                 type="Number"
                                 min={1}
-                                placeholder='Initial price before discount'
+                                placeholder={item?.initialPrice}
                         />
                    </div>
                 </div>
@@ -165,7 +162,7 @@ function PostAd() {
                             onChange={(e)=>setDescription(e.target.value)}
                             className='bg-[#f6f7f8] w-auto h-[6rem] rounded-lg pl-[3rem]'
                             type="text"
-                            placeholder='More description (CPU ,Battery,Inches,Android)'
+                            placeholder={item?.description}
                         />
                 </div>
                     {/* <div className='w-full flex flex-col gap-[1rem] text-[2rem]'>
@@ -185,7 +182,7 @@ function PostAd() {
                             onChange={(e)=>setLocation(e.target.value)}
                             className='bg-[#f6f7f8] text-[1.8rem] w-auto h-[6rem] rounded-lg pl-[3rem]'
                             type="text"
-                            placeholder='County , region        ( Eldoret, kimumu)'
+                            placeholder={item?.location}
                         />
                     </div>
                     {/* <div className='w-full flex flex-col gap-[1rem] text-[2rem]'>
@@ -206,7 +203,7 @@ function PostAd() {
                         <p className='text-[#6c8ea0] font-bold text-[1.5rem]'>- Add atleast one photo for this category</p>
                     </div>
                     <div className='items-center cursor-pointer flex  gap-[4rem] text-[2rem]'>
-                        {!images && <label for="getFile1" className='relative cursor-pointer w-[8rem]  h-[8rem] bg-[#6c8ea0] rounded-full'> 
+                        {!imagess && <label for="getFile1" className='relative cursor-pointer w-[8rem]  h-[8rem] bg-[#6c8ea0] rounded-full'> 
                             <input
                                 onChange={(e)=>setImages(e.target.files[0])} 
                                 type="file"
@@ -216,16 +213,16 @@ function PostAd() {
                             />                       
                             <IoMdAdd className='absolute text-[white] top-[2.2rem] left-[1.9rem] text-[4rem]'/>
                         </label>}
-                        {images && <div>
+                        {imagess && <div>
                             <img 
                                 className='w-[130px] h-[130px] object-cover shadow-md rounded-full'
-                                src={images ? URL.createObjectURL(images) : "https://pbs.twimg.com/media/FrFAnx4WYAESxif?format=jpg&name=small"} 
+                                src={imagess ? URL.createObjectURL(imagess) : "https://pbs.twimg.com/media/FrFAnx4WYAESxif?format=jpg&name=small"} 
                                 alt="image" 
                             />
                         </div>}
                         <p className='text-[2rem] font-[599] cursor-default'>Each picture must not exceed 5 Mb</p>
                     </div>
-                </div>  
+                </div> 
 
                 <button 
                     onClick={handleClick}
@@ -235,7 +232,8 @@ function PostAd() {
                 </button>
 
                 </div> 
-            </div>
+            </div> 
+            ))}
             <div>
                 <Footer/>
             </div>
@@ -243,4 +241,4 @@ function PostAd() {
   )
 }
 
-export default PostAd
+export default EditAd

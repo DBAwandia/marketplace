@@ -4,6 +4,7 @@ import Footer from "../Footer/Footer"
 import { LoginContext } from '../../Context/LoginContext'
 import { axiosInstance } from '../../Utils/BaseUrl'
 import { Link, useNavigate } from 'react-router-dom'
+import { MdDelete } from "react-icons/md"
 
 
 function Wishlist() {
@@ -31,6 +32,14 @@ function Wishlist() {
         fetchData()
     },[username])
 
+    // removeWishList
+    const removeWishList = async (id) =>{
+        try{
+            await axiosInstance.put("/Posts/removeFromWishlist", {username: username , productId: id})
+            setData(data?.filter((item)=> item._id !== id))
+        }catch(err){}
+    }
+
 
     //Navigate to product page
     const handleClick = async (id) =>{
@@ -48,7 +57,7 @@ function Wishlist() {
         </div>
         <div className='min-h-0 m-auto w-[60%] mt-[5rem] mb-[5rem] pt-[3rem] flex flex-col gap-[3rem] items-center text-[2rem] bg-[#ffffff] border-2 rounded-2xl shadow-2xl'>
                 <div className='w-full text-center py-[2rem] text-[3rem]  font-bold text-[black]  border-b-2 border-[#dae2e7]'>
-                    <h1>My wishlist items  😊💚</h1>
+                    <h1>My wishlist items  😊💚      ( {" " +data?.length} )</h1>
                 </div>
            {data?.length < 1 ? 
             <div className='w-full h-[calc(100vh-40vh)] grid items-center justify-center cursor-default'>
@@ -64,10 +73,12 @@ function Wishlist() {
 
                 >
                 <div 
-                 onClick={()=>handleClick(item?._id)}
                  className='relative flex cursor-default  border-[#ebf2f7] items-center gap-[2.6rem] flex-[1] p-[3rem] hover:bg-[#f6f9fc]'
                 >
-                <div className='flex-[0.4]'>
+                <div 
+                    onClick={()=>handleClick(item?._id)}
+                    className='flex-[0.4]'
+                >
                     <img 
                         className='w-[1200px] h-[355px] object-cover'
                         src={item?.image} 
@@ -83,7 +94,14 @@ function Wishlist() {
                     <p className='text-[#6c8ea0] line-through'>{"KSH" + " " + item?.initialPrice}</p>
                     <span className='text-[#6c8ea0]'>{item?.location}</span>
                 </div>
-               
+
+                <div 
+                    onClick={()=>removeWishList(item?._id)}
+                    className='absolute right-[1rem] top-0 cursor-pointer '
+                >
+                    <MdDelete className='text-[3rem] text-[#acacac] hover:text-[#ff4f4f]'/>
+                </div>
+
                 </div>
                 <div className='flex flex-col gap-[2rem] right-[2rem] bottom-[2rem] absolute'>
                     <div className='border-2 rounded-lg border-[#00b53f] hover:border-[#1bd462] w-[20rem] h-[6rem] '>

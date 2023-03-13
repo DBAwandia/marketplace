@@ -30,7 +30,6 @@ function Navbar() {
     setLocalSorageSearch(searchs)
   }, [search])
 
-  console.log(setLocalSorageSearch)
   //SEARCH ITEMS
   const handleSubmit = async(e) =>{
     e.preventDefault()
