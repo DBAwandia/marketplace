@@ -9,7 +9,7 @@ import { axiosInstance } from '../../../Utils/BaseUrl'
 import { LoginContext } from '../../../Context/LoginContext'
 
 function Allcategories() {
-  const [countdown, setCountdown] = useState({ hours: 24, minutes: 0, seconds: 0 });
+  const [remainingTime, setRemainingTime] = useState(0);
   const [ data, setData ] = useState(null)
   const [ wishlist, setWishlist ] = useState(null)
   const { user } = useContext(LoginContext)
@@ -72,30 +72,50 @@ function Allcategories() {
 
   //TIMER
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCountdown(prevCountdown => {
-        const { hours, minutes, seconds } = prevCountdown;
+    // Get the start time from localStorage
+        const storedStartTime = localStorage.getItem("timerStartTime");
 
-        // Calculate the total remaining time in seconds
-        let remainingSeconds = hours * 60 * 60 + minutes * 60 + seconds - 1;
+        // If the start time exists in localStorage, use it to calculate the remaining time
+        if (storedStartTime) {
+          const startTime = parseInt(storedStartTime, 10);
+          const currentTime = new Date().getTime() / 1000;
+          const elapsedTime = currentTime - startTime;
+          const newRemainingTime = Math.max(0, 24 * 60 * 60 - elapsedTime);
+          setRemainingTime(newRemainingTime);
+        } else {
+          // Otherwise, set the start time to the current time
+          const startTime = new Date().getTime() / 1000;
+          localStorage.setItem("timerStartTime", startTime.toString());
+          setRemainingTime(24 * 60 * 60);
+        }
 
-        // Calculate the new hours, minutes, and seconds
-        const newHours = Math.floor(remainingSeconds / (60 * 60));
-        remainingSeconds -= newHours * 60 * 60;
-        const newMinutes = Math.floor(remainingSeconds / 60);
-        remainingSeconds -= newMinutes * 60;
-        const newSeconds = remainingSeconds;
+        // Define the function to update the timer
+        function updateTimer() {
+          // Get the current time
+          const currentTime = new Date().getTime() / 1000;
 
-        return { hours: newHours, minutes: newMinutes, seconds: newSeconds };
-      });
-    }, 1000);
+          // Calculate the elapsed time in seconds
+          const startTime = parseFloat(localStorage.getItem("timerStartTime"));
+          const elapsedTime = currentTime - startTime;
 
-    // Clear the interval when the component is unmounted
-    return () => clearInterval(interval);
-  }, []);
+          // Calculate the remaining time in seconds
+          const newRemainingTime = Math.max(0, 24 * 60 * 60 - elapsedTime);
 
-  const formattedCountdown = `${countdown.hours.toString().padStart(2, '0')}h ${countdown.minutes.toString().padStart(2, '0')}m ${countdown.seconds.toString().padStart(2, '0')}s`;
-  localStorage.setItem("timer" , JSON.stringify(formattedCountdown))
+          // Update the remaining time
+          setRemainingTime(newRemainingTime);
+        }
+
+        // Update the timer every second
+        const timerInterval = setInterval(updateTimer, 1000);
+
+        // Clean up the timer interval on unmount
+        return () => clearInterval(timerInterval);
+    }, []);
+
+    // Convert the remaining time to hours, minutes, and seconds
+    const hours = Math.floor(remainingTime / 3600);
+    const minutes = Math.floor((remainingTime % 3600) / 60);
+    const seconds = Math.floor(remainingTime % 60);
 
 
   let description = data && data?.map((item) => item?.description)
@@ -111,9 +131,10 @@ function Allcategories() {
                   Flash sales
                 </h1>
           </div>
-        <div className='text-[2rem] px-[5rem] py-[2rem] text-[#75757a]'>
-          <p>
-            Time Left:    {JSON.parse(localStorage.getItem("timer"))} 
+        <div className='text-[2rem] flex items-center gap-[2rem] px-[5rem] py-[2rem] text-[#75757a]'>
+          <span>Time Left:</span>
+          <p className='font-bold text-[2.2rem]'>
+            {hours} : {minutes} : {seconds} 
           </p>
         </div>
         <div className='grid grid-cols-4 gap-[2rem] py-[2rem] px-[2rem] cursor-pointer'>

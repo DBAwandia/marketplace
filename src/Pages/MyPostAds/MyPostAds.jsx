@@ -1,4 +1,5 @@
 import React , { useContext,useState,useEffect } from 'react'
+import moment from 'moment'
 import { Link, useNavigate } from 'react-router-dom'
 import Footer from '../../Components/Footer/Footer'
 import Navbar from '../../Components/Navbar/Navbar'
@@ -14,7 +15,7 @@ function MyPostAds() {
 
     const navigate = useNavigate()
 
-    //fetch wishlist items
+    //fetch post ads items
     useEffect(()=>{
         const fetchData = async() =>{
             // setData(JSON.parse(localStorage.getItem("fetchWishItems")))
@@ -30,6 +31,8 @@ function MyPostAds() {
         }
         fetchData()
     },[username])
+
+    console.log(data)
 
     //DELETE POST
     const handleDelete = async(id)=>{
@@ -98,6 +101,7 @@ function MyPostAds() {
                     <p className='font-extrabold text-[#00b53f] text-[2.3rem]'>{"KSH" + " " + item?.price}</p>
                     <p className='text-[#6c8ea0] line-through'>{"KSH" + " " + item?.initialPrice}</p>
                     <span className='text-[#6c8ea0]'>{item?.location}</span>
+                    <p className='text-[1.8rem] font-bold'>{moment(item?.createdAt).format("DD-MM-YYYY HH:mm:ss")}</p>
                 </div>
                
                 </div>

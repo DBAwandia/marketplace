@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../../../Utils/BaseUrl'
 
 function Flashsales() {
-  const [ isAdded, setIsAdded ] = useState(false)
+  const [remainingTime, setRemainingTime] = useState(0);
   const [ posts, setPosts ] = useState(null)
 
   const navigate = useNavigate()
@@ -34,6 +34,53 @@ function Flashsales() {
   const handleClick = async (id)=>{
     navigate("/product/" +id)
   }
+
+   //TIMER
+   useEffect(() => {
+    // Get the start time from localStorage
+        const storedStartTime = localStorage.getItem("timerStartTime");
+
+        // If the start time exists in localStorage, use it to calculate the remaining time
+        if (storedStartTime) {
+          const startTime = parseInt(storedStartTime, 10);
+          const currentTime = new Date().getTime() / 1000;
+          const elapsedTime = currentTime - startTime;
+          const newRemainingTime = Math.max(0, 24 * 60 * 60 - elapsedTime);
+          setRemainingTime(newRemainingTime);
+        } else {
+          // Otherwise, set the start time to the current time
+          const startTime = new Date().getTime() / 1000;
+          localStorage.setItem("timerStartTime", startTime.toString());
+          setRemainingTime(24 * 60 * 60);
+        }
+
+        // Define the function to update the timer
+        function updateTimer() {
+          // Get the current time
+          const currentTime = new Date().getTime() / 1000;
+
+          // Calculate the elapsed time in seconds
+          const startTime = parseFloat(localStorage.getItem("timerStartTime"));
+          const elapsedTime = currentTime - startTime;
+
+          // Calculate the remaining time in seconds
+          const newRemainingTime = Math.max(0, 24 * 60 * 60 - elapsedTime);
+
+          // Update the remaining time
+          setRemainingTime(newRemainingTime);
+        }
+
+        // Update the timer every second
+        const timerInterval = setInterval(updateTimer, 1000);
+
+        // Clean up the timer interval on unmount
+        return () => clearInterval(timerInterval);
+    }, []);
+
+    // Convert the remaining time to hours, minutes, and seconds
+    const hours = Math.floor(remainingTime / 3600);
+    const minutes = Math.floor((remainingTime % 3600) / 60);
+    const seconds = Math.floor(remainingTime % 60);
   
 
   //FILTER FETCH TO 4 ITEMS
@@ -49,9 +96,10 @@ function Flashsales() {
                     Flash sales
                   </h1>
                 </div>
-                <div>
-                  <p>
-                    Time Left: {JSON.parse(localStorage.getItem("timer"))}
+                <div className='text-[2rem] flex items-center gap-[2rem] px-[5rem] py-[2rem] text-[#fcfcfc]'>
+                  <span>Time Left:</span>
+                  <p className='font-bold text-[2.3rem]'>
+                    {hours} : {minutes} : {seconds} 
                   </p>
                 </div>
                 
