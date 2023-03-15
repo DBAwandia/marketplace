@@ -47,9 +47,6 @@ function Wishlist() {
     }
 
 
-    let description = data && data?.map((item) => item?.description)
-
-
   return (
     <div className='relative w-full min-h-screen bg-[#ebf2f7]'>
         <div className='sticky top-0 z-[9999999999999999]'>
@@ -88,7 +85,7 @@ function Wishlist() {
                 <div className='flex flex-col gap-[2rem] flex-[0.6]'>
                     <h2 className='font-bold'>{item?.name}</h2>
                     <p className='font-[599]'>                
-                        {description[0]?.substr(0, 60)}
+                        {item?.description?.slice(0,40)}
                     </p>
                     <p className='font-extrabold text-[#00b53f] text-[2.3rem]'>{"KSH" + " " + item?.price}</p>
                     <p className='text-[#6c8ea0] line-through'>{"KSH" + " " + item?.initialPrice}</p>

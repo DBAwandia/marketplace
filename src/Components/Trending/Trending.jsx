@@ -10,12 +10,12 @@ function Trending() {
       <div className='py-[3rem]'>
         <Flashsales/>
       </div>
-      <div>
+      {/* <div>
         <Bestselling/>
       </div>
       <div>
         <Newarrivals/>
-      </div>
+      </div> */}
       <div>
         <RecentlyViewed/>
       </div>
