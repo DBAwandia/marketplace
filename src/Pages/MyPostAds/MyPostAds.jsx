@@ -58,9 +58,6 @@ function MyPostAds() {
         navigate("/editad" , {state: id})
     }
 
-    let description = data && data?.map((item) => item?.description)
-
-
   return (
     <div className='relative w-full min-h-screen bg-[#ebf2f7]'>
         <div className='sticky top-0 z-[9999999999999999]'>
@@ -96,12 +93,12 @@ function MyPostAds() {
                 <div className='flex flex-col gap-[2rem] flex-[0.6]'>
                     <h2 className='font-bold'>{item?.name}</h2>
                     <p className='font-[599]'>                
-                        {description[0]?.substr(0, 60)}
+                        {item?.description?.slice(0,40)}
                     </p>
                     <p className='font-extrabold text-[#00b53f] text-[2.3rem]'>{"KSH" + " " + item?.price}</p>
                     <p className='text-[#6c8ea0] line-through'>{"KSH" + " " + item?.initialPrice}</p>
                     <span className='text-[#6c8ea0]'>{item?.location}</span>
-                    <p className='text-[1.8rem] font-bold'>{moment(item?.createdAt).format("DD-MM-YYYY HH:mm:ss")}</p>
+                    <p className='text-[1.8rem] font-bold'>{moment(item?.createdAt).format("YYYY-MM-DD HH:mm:ss")}</p>
                 </div>
                
                 </div>
@@ -124,9 +121,9 @@ function MyPostAds() {
                     <button 
                         disabled={item?.soldOut}
                         onClick={()=>handleSold(item?._id)}
-                        className='border-[#00b53f] rounded-lg w-[15rem] h-[5rem] bg-[#00b53f] text-[white]'
+                        className={item?.soldOut ? "bg-[#e61601] rounded-lg w-[15rem] h-[5rem] text-[white] ":"border-[#00b53f] rounded-lg w-[15rem] h-[5rem] bg-[#00b53f] text-[white]"}
                     >
-                            {item?.soldOut ? "Inactive" : "Mark sold"}
+                            {item?.soldOut ? "Sold" : "Mark sold"}
                     </button>
                 </div>
             </div>))}

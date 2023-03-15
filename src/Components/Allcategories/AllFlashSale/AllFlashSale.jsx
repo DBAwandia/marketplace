@@ -117,8 +117,6 @@ function Allcategories() {
     const minutes = Math.floor((remainingTime % 3600) / 60);
     const seconds = Math.floor(remainingTime % 60);
 
-
-  let description = data && data?.map((item) => item?.description)
   
   return (
     <div className='relative w-full min-h-screen flex flex-col gap-[3rem]'>
@@ -183,7 +181,7 @@ function Allcategories() {
                 {item?.name}
               </p>
               <p className='text-[#6c8ea0] w-[30rem] text-[1.5rem] font-[500]'>
-                {description[0]?.substr(0, 80)}
+                {item?.description?.slice(0,40)}
               </p>
               <span className='text-[#282828] font-extrabold text-[3rem]'>
                 {"$" + item?.price}

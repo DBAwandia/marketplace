@@ -35,8 +35,6 @@ function AllPhones() {
     fetchData()
   }, [])
 
-  console.log(posts)
-
 
   // filter posts
   const Search = (posts) =>{
@@ -164,6 +162,9 @@ function AllPhones() {
               <span className='text-[#282828] font-extrabold text-[3rem]'>
                 {"$" + item?.price}
               </span>
+              <p>
+                {item?.description?.slice(0,40)}
+              </p>
             <div className='flex gap-[4rem] items-center '>
               <p className='line-through decoration-4 decoration-[#8142bb] text-[#6c8ea0]'>
                 {"$" + item?.initialPrice}

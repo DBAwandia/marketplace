@@ -29,7 +29,6 @@ function Flashsales() {
     fetchData()
   }, [])
 
-  let description = posts && posts.map((item) => item?.description)
 
   const handleClick = async (id)=>{
     navigate("/product/" +id)
@@ -85,6 +84,7 @@ function Flashsales() {
 
   //FILTER FETCH TO 4 ITEMS
   let limited = posts?.filter((val,i)=>i<4)
+
 
   return (
     <div className='w-full min-h-[40rem] bg-white shadow-2xl rounded-2xl'>
@@ -143,8 +143,8 @@ function Flashsales() {
                   <p className='font-bold text-[#007185]'>
                     {item?.name}
                   </p>
-                  <p className='text-[#6c8ea0] w-[30rem] text-[1.5rem] font-[500]'>
-                    {description[0]?.substr(0, 60)}
+                  <p className='text-[#6c8ea0] text-[1.7rem] font-[500]'>
+                    {item?.description?.slice(0,40)}
                   </p>
                   <span className='text-[#282828] font-extrabold text-[3rem]'>
                     {"$" + item?.price}
