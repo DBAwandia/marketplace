@@ -2,10 +2,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import { LoginContext } from '../../Context/LoginContext'
 import { axiosInstance } from '../../Utils/BaseUrl'
 import moment from 'moment'
+import { useLocation } from 'react-router-dom'
 
 function Chathighlight({chatIsActive}) {
   const [ datas , setDatas ] = useState(null)
   const { user } = useContext(LoginContext)
+  
 
   //Fetch conversations
   useEffect(()=>{
@@ -21,7 +23,6 @@ function Chathighlight({chatIsActive}) {
 
   // const datass = [datas]
   
-  console.log(datas)
   return (
     <div className='w-full '>
       <div className='w-full flex flex-col gap-[2rem]'>

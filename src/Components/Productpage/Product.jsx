@@ -41,6 +41,9 @@ function Product() {
     let maxLength = 50 // maximum number of characters to extract
     //trim the string to the maximum length
     let trimmedString = description[0]?.substr(0, maxLength);
+
+    //PRODUCT ID
+    let id = productData && productData.map((item) => item?._id)
     
     //startchat
     const startMessage = ()=>{
@@ -48,9 +51,9 @@ function Product() {
     }
 
     //sendMessage
-    const sendTxtMessage = ()=>{
+    const sendTxtMessage = (id)=>{
       setSendMessage(false)
-      navigate("/chat")
+      navigate("/chat" , { state: id })
 
     }
 
@@ -147,7 +150,7 @@ function Product() {
                     {sendMessage && 
                     <div 
                       className='text-[white] bg-[#fea03c] flex text-[2rem] gap-[2rem] items-center justify-center w-full h-[6rem] font-[555] rounded-md cursor-pointer'
-                      onClick={sendTxtMessage}
+                      onClick={()=>sendTxtMessage(id)}
                     >
                       <p>Send text</p>
                     </div>}
