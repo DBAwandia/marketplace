@@ -2,9 +2,14 @@ import React, { useState } from 'react'
 import Navbar from '../../Components/Navbar/Navbar'
 import Chathighlight from '../Chathighlight/Chathighlight'
 import Chat from '../Chats/Chat'
+import { useLocation } from "react-router-dom"
 
 function Messagechat() {
     const [ chatIsActive, setChatIsactive ] = useState(false)
+    const location = useLocation()
+//   const id = location.state
+  const id = location.state?.id[0]
+
   return (
     <div className='relative w-full min-h-screen border-b-2 bg-[#ebf2f7]'>
         <div className='sticky top-0 z-[9999999]'>
@@ -30,18 +35,19 @@ function Messagechat() {
                     </div> */}
                 </div>
 
-            {chatIsActive &&
+            {/* {chatIsActive && */}
                 <div 
                     className='min-h-[calc(100vh-12vh)] hide_scrollbar overflow-y-scroll flex-[0.7] bg-[#f2f2f2]'
                 >
                 <Chat 
                     setChatIsactive={setChatIsactive}
+                    id={id}
                 /> 
             </div>
-            }
+            {/* } */}
 
             {/* SHOW SVG TO OPEN CHAT IF CHAT !chatIsActive */}
-            {!chatIsActive &&
+            {/* {!chatIsActive &&
                 <div className='min-h-[calc(100vh-12vh)] flex-[0.7] bg-[#f2f2f2]'>
                 <div className='w-full grid items-center justify-center h-[100%]'>
                     <div className='flex flex-col-reverse items-center justify-center gap-[1rem]'>
@@ -54,7 +60,7 @@ function Messagechat() {
                     </div>
                 </div>
             </div>
-            }
+            } */}
             </div>
         </div>
       

@@ -1,42 +1,58 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useContext } from 'react'
 import { HiFlag } from 'react-icons/hi'
 import { GrClose } from 'react-icons/gr'
 import { BsFillFlagFill } from 'react-icons/bs'
 import TextChat from './TextChat'
 import { useLocation } from 'react-router-dom'
 import { axiosInstance } from '../../Utils/BaseUrl'
+import { LoginContext } from '../../Context/LoginContext'
 
-const data =[
-  {
-      image: "https://www.deccanherald.com/sites/dh/files/articleimages/2023/01/17/xrn125g-cov-sho-sel-1-1178221-1673944996.jpg",
-      name: "Wandia",
-      product: "Samsung",
-      text:"lorem ipsum",
-      price: 7685
-  }
-]
-function Chat({setChatIsactive}) {
+function Chat({setChatIsactive }) {
   const [ data, setData ] = useState(null)
-  const location = useLocation()
-  const id = location.state
-  const datas = [data]
+
+  const datass = [data]
+
+  const [ datas , setDatas ] = useState(null)
+  const { user } = useContext(LoginContext)
+  const phonenumber = user?.phonenumber
+
+  //Fetch conversations texts
+  useEffect(()=>{
+    const fetchData = async() =>{
+      try{
+        const res = await axiosInstance.get(`/Messages/getMessages?QUERY=${phonenumber}`)
+        setDatas(res.data)
+        
+      }catch(err){}
+    }
+    fetchData()
+  },[])
+
+
+  //FETCH PRODUCT ID
+  const id = datas?.map((item) => item?.productID)
+
 
    //GET POST BY ID
    useEffect(()=>{
     const fetchData = async() =>{
       try{
-        const res = await axiosInstance.get(`/Posts/getPost/${location.state[0]}`)
+        const res = await axiosInstance.get(`/Posts/getPost/${id[0]}`)
         setData(res.data)
+
       }catch{}
     }
     fetchData()
   },[id])
 
-  console.log(data)
+  
+  //Seller number
+  const sellerContact = datass?.map((item) => item?.phonenumber)
+
 
   return (
     <div className='w-full flex flex-col gap-[3rem]'>
-      {datas?.map((item)=>(
+      {datass?.map((item)=>(
       <div className='flex text-[2rem] items-center justify-between shadow-md bg-[#fff] py-[0.5rem] px-[4rem]'>
         <div className='flex items-center gap-[3.5rem]'>
           <img 
@@ -58,7 +74,9 @@ function Chat({setChatIsactive}) {
         </div>
       </div>))}
       <div>
-        <TextChat/>
+        <TextChat
+          sellerContact={sellerContact[0]}
+        />
       </div>
     </div>
   )

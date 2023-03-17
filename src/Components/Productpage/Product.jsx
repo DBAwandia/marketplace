@@ -7,12 +7,13 @@ import ProductDetail from './ProductDetail'
 import Footer from "../../Components/Footer/Footer"
 import { useLocation, useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../../Utils/BaseUrl'
-// import { LoginContext } from '../../Context/LoginContext'
+import { LoginContext } from '../../Context/LoginContext'
 
 function Product() {
     const navigate = useNavigate()
     const [ sellersContact, setSellersContact ] = useState(false)
     const [ sendMessage , setSendMessage ] = useState(false)
+    const [ text , setText ] = useState("")
     const [ data, setData ] = useState(null)
     const productData = [data]
 
@@ -22,8 +23,8 @@ function Product() {
     //passed as prop at ProductDetails component
     const itemId = location.pathname.split("/")[2]
 
-    // const { user } = useContext(LoginContext)
-    // const phonenumber = user?.phonenumber
+    const { user } = useContext(LoginContext)
+    const phonenumber = user?.phonenumber
 
     //GET POST BY ID
     useEffect(()=>{
@@ -35,6 +36,13 @@ function Product() {
       }
       fetchData()
     },[itemId])
+
+    
+    let sellerNumber = productData && productData.map((item) => item?.phonenumber)
+    let productID = productData && productData.map((item) => item?._id)
+    let productIDs = productID[0]
+
+    // console.log( productID[0])
 
     //Trim description to first 15 letters
     let description = productData && productData.map((item) => item?.description)
@@ -51,9 +59,24 @@ function Product() {
     }
 
     //sendMessage
-    const sendTxtMessage = (id)=>{
+    const sendTxtMessage = async (id)=>{
       setSendMessage(false)
-      navigate("/chat" , { state: id })
+      try{
+        
+      const ress =  await axiosInstance.post("/Conversations/conversation", {senderPhone:phonenumber , receiverPhone:sellerNumber[0]})
+      const conversationID = ress.data._id 
+
+      await axiosInstance.post("/Messages/message" , { 
+        
+            converID:conversationID ,
+            productID: productIDs, 
+            senderPhone:phonenumber , 
+            receiverPhone:sellerNumber[0] , 
+            text: text   
+          })
+        navigate("/chat" , { state: { id: id }  })
+
+      }catch(err){}
 
     }
 
@@ -142,6 +165,7 @@ function Product() {
                     {sendMessage && 
                     <div className='w-full h-[6rem] rounded-md text-[2rem]'>
                       <input 
+                        onChange={(e)=>setText(e.target.value)}
                         className='w-full h-[6rem] rounded-md  bg-[#f6f7f8] text-[2rem] text-center  border-solid border-2 border-[#f3cfa9]'
                         type="text" 
                         placeholder='Say hello  👋' 
