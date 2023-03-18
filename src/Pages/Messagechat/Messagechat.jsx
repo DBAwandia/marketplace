@@ -1,14 +1,31 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import Navbar from '../../Components/Navbar/Navbar'
 import Chathighlight from '../Chathighlight/Chathighlight'
 import Chat from '../Chats/Chat'
 import { useLocation } from "react-router-dom"
+import { LoginContext } from '../../Context/LoginContext'
+import { axiosInstance } from '../../Utils/BaseUrl'
 
 function Messagechat() {
     const [ chatIsActive, setChatIsactive ] = useState(false)
     const location = useLocation()
 //   const id = location.state
   const id = location.state?.id[0]
+
+  const [ datas , setDatas ] = useState(null)
+  const { user } = useContext(LoginContext)
+  let datass = datas
+
+  //Fetch conversations
+  useEffect(()=>{
+    const fetchData = async() =>{
+      try{
+        const res = await axiosInstance.get(`/Conversations/conversation/${user?.phonenumber}`)
+        setDatas(res.data)
+      }catch(err){}
+    }
+    fetchData()
+  },[])
 
   return (
     <div className='relative w-full min-h-screen border-b-2 bg-[#ebf2f7]'>
@@ -25,10 +42,14 @@ function Messagechat() {
                         onClick={()=>setChatIsactive(true)}
                         className='border-b-2 border-[#e6e3e9]'
                     >
-                        <Chathighlight
-                            setChatIsactive={setChatIsactive}
-                            chatIsActive={chatIsActive}
-                        />
+
+                       {datass?.map((item) =>(
+                            <Chathighlight
+                                datas={item}
+                                setChatIsactive={setChatIsactive}
+                                chatIsActive={chatIsActive}
+                            />
+                        )) }
                     </div>
                     {/* <div className='border-b-2 border-[#e6e3e9]'>
                         <Chathighlight/>
@@ -39,10 +60,15 @@ function Messagechat() {
                 <div 
                     className='min-h-[calc(100vh-12vh)] hide_scrollbar overflow-y-scroll flex-[0.7] bg-[#f2f2f2]'
                 >
-                <Chat 
-                    setChatIsactive={setChatIsactive}
-                    id={id}
-                /> 
+                    
+                {datass?.map((item) =>(
+                    <Chat 
+                        dataz={item}
+                        setChatIsactive={setChatIsactive}
+                        id={id}
+                    /> 
+                )) }
+
             </div>
             {/* } */}
 

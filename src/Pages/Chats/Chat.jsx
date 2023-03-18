@@ -7,7 +7,14 @@ import { useLocation } from 'react-router-dom'
 import { axiosInstance } from '../../Utils/BaseUrl'
 import { LoginContext } from '../../Context/LoginContext'
 
-function Chat({setChatIsactive }) {
+function Chat({setChatIsactive , dataz }) {
+
+  //CONVERSATION ID
+  const converID = dataz?._id
+
+  // const converID = dataz?.map((item) => item?._id)
+  console.log(converID)
+
   const [ data, setData ] = useState(null)
 
   const datass = [data]
@@ -45,10 +52,6 @@ function Chat({setChatIsactive }) {
     fetchData()
   },[id])
 
-  
-  //Seller number
-  const sellerContact = datass?.map((item) => item?.phonenumber)
-
 
   return (
     <div className='w-full flex flex-col gap-[3rem]'>
@@ -73,11 +76,15 @@ function Chat({setChatIsactive }) {
           <GrClose onClick={()=>setChatIsactive(false)}/>
         </div>
       </div>))}
+
       <div>
+       {/* {converID?.map((item)=>  */}
         <TextChat
-          sellerContact={sellerContact[0]}
-        />
+          converID={converID}
+        /> 
+         {/* )} */}
       </div>
+
     </div>
   )
 }

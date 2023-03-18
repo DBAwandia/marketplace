@@ -8,7 +8,7 @@ import { axiosInstance } from '../../Utils/BaseUrl'
 import { LoginContext } from '../../Context/LoginContext'
 
 
-function TextChat({sellerContact}) {
+function TextChat({converID}) {
   const scrollRef = useRef()
   const [ txtMsg , setTxtMsg ] = useState("")
 
@@ -25,24 +25,27 @@ function TextChat({sellerContact}) {
   const phonenumber = user?.phonenumber
   
 
-  //Fetch conversations texts
-  useEffect(()=>{
+  const [ text , setText ] = useState(null)
+
+
+  //UseEffect get friends details
+   useEffect(()=>{
     const fetchData = async() =>{
+      // const friendID =  datas?.members.find(m => m !== owner)
+
       try{
-        const res = await axiosInstance.get(`/Messages/getMessages?QUERY=${phonenumber}`)
-        setDatas(res.data)
-        // console.log(res)
+        //  const res =  await axiosInstance.get(`/Users/getUser?QUERY=${friendID}`)
+         const ress = await axiosInstance.get(`/Messages/getMessages/${converID}`)
+         setDatas(ress.data)
+
       }catch(err){}
     }
+
     fetchData()
-  },[])
 
-  const conversationID = datas?.map((item) => item?.consversationID)
-  const receiverPhone = datas?.map((item) => item?.receiverPhone)
-  //const conversationID = datas?.map((item) => item?.consversationID)
+  },[user])
 
-
-// console.log(receiverPhone, conversationID[0] , txtMsg)s
+  console.log(datas)
 
   //post Message
   const handleClick  = async() =>{
@@ -51,7 +54,7 @@ function TextChat({sellerContact}) {
         
           converID: conversationID[0] , 
           senderPhone: phonenumber , 
-          receiverPhone: receiverPhone , 
+          receiverPhone: receiverPhone[0] , 
           text: txtMsg   
         })
 
