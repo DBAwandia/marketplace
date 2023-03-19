@@ -8,19 +8,19 @@ import { axiosInstance } from '../../Utils/BaseUrl'
 import { LoginContext } from '../../Context/LoginContext'
 
 
-function TextChat({converID}) {
+function TextChat({itemz}) {
   const scrollRef = useRef()
   const [ txtMsg , setTxtMsg ] = useState("")
-
-  const scrollToBottom = () => {
-    scrollRef.current.scrollIntoView({ behavior: "smooth" });
-  }
-
-  useEffect(()=>{
-    scrollToBottom()
-  },[])
-
   const [ datas , setDatas ] = useState(null)
+
+  // const scrollToBottom = () => {
+  //   scrollRef.current.scrollIntoView({ behavior: "smooth" });
+  // }
+
+  // useEffect(()=>{
+  //   scrollToBottom()
+  // },[])
+
   const { user } = useContext(LoginContext)
   const phonenumber = user?.phonenumber
   
@@ -28,24 +28,8 @@ function TextChat({converID}) {
   const [ text , setText ] = useState(null)
 
 
-  //UseEffect get friends details
-   useEffect(()=>{
-    const fetchData = async() =>{
-      // const friendID =  datas?.members.find(m => m !== owner)
+ 
 
-      try{
-        //  const res =  await axiosInstance.get(`/Users/getUser?QUERY=${friendID}`)
-         const ress = await axiosInstance.get(`/Messages/getMessages/${converID}`)
-         setDatas(ress.data)
-
-      }catch(err){}
-    }
-
-    fetchData()
-
-  },[user])
-
-  console.log(datas)
 
   //post Message
   const handleClick  = async() =>{
@@ -66,8 +50,10 @@ function TextChat({converID}) {
   }
 
   return (
+<>
 
-    <div  ref={scrollRef} className='flex flex-col gap-[1rem] text-[2rem]' >
+{/* {itemz?.map((item) =>( */}
+    <div   className='flex flex-col gap-[1rem] text-[2rem]' >
 
        {/* HEADER WARNING */}
        <div className='text-center text-[#6c8ea0] border-2 border-[#6c8ea0] w-[50%] self-center py-[1.2rem] rounded-full'>
@@ -84,16 +70,14 @@ function TextChat({converID}) {
 
       {/* TEXT MESSAGE */}
         <div className='relative p-[-3rem] flex flex-col gap-[2rem]'>
-      {datas?.map((item) =>(
         
-        <div className={phonenumber === item?.senderPhone ? "text-[#536471] text-start shadow-lg rounded-[60px] bg-[#fff] mr-auto min-w-[15%]  max-w-[70%] px-[2rem] py-[1rem]" : "relative text-[#536471]  rounded-[60px] bg-[#d9fec2] text-start shadow-lg ml-auto min-w-[15%] max-w-[70%] px-[2rem] py-[1rem]" }>
-          <p className='px-[1rem] pb-[2rem]'>{ item?.text }</p>
+        <div className={phonenumber === itemz?.senderPhone ? "text-[#536471] text-start shadow-lg rounded-[60px] bg-[#fff] mr-auto min-w-[15%]  max-w-[70%] px-[2rem] py-[1rem]" : "relative text-[#536471]  rounded-[60px] bg-[#d9fec2] text-start shadow-lg ml-auto min-w-[15%] max-w-[70%] px-[2rem] py-[1rem]" }>
+          <p className='px-[1rem] pb-[2rem]'>{ itemz?.text }</p>
           <div className="absolute text-[#9a9898] left-[3.5rem] bottom-[0.5rem] flex items-center gap-[0.6rem] text-[1.4rem]">
             <span>17:08</span>
             <BiCheckDouble className='text-[2.5rem]'/>
           </div>
         </div>
-        ))}
 
       </div>
 
@@ -124,7 +108,11 @@ function TextChat({converID}) {
       </div>
 
       </div>
+      
     </div>
+    {/* ))} */}
+    </>
+
   )
 }
 

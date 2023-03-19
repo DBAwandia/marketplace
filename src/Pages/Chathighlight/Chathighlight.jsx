@@ -3,11 +3,17 @@ import { LoginContext } from '../../Context/LoginContext'
 import { axiosInstance } from '../../Utils/BaseUrl'
 import moment from 'moment'
 import { useLocation } from 'react-router-dom'
+import { ChatContext } from '../../Context/ChatContext'
 
 function Chathighlight({chatIsActive , datas}) {
 
+  const { dispatch } = useContext(ChatContext)
+
   const { user } = useContext(LoginContext)
   const owner =  user?.phonenumber.toString()
+
+  console.log(owner , user)
+
 
   // conversationID
   const id = datas?._id
@@ -28,6 +34,7 @@ function Chathighlight({chatIsActive , datas}) {
          setText(ress.data)
 
          setFriendData(res?.data)
+
       }catch(err){}
     }
 
@@ -37,17 +44,26 @@ function Chathighlight({chatIsActive , datas}) {
 
   let limited = text?.filter((val,i)=>i<2)
 
+  const handleChat = async (id) =>{
+    dispatch({type: "OPENS" , payload: id })
+  }
   
   return (
     <div className='w-full '>
       <div className='w-full flex flex-col gap-[2rem]'>
+       {/* {text?.map((item , i)=> 
+       <div 
+       onClick={()=>handleChat(item)}
+       key={i}
+       
+       > */}
        { friendDatas?.map((item, i)=>(
           <div 
-            onClick={()=>handleClick()}
             key={i} 
-            className={chatIsActive ? 'w-full flex items-center justify-between px-[3rem] py-[1rem] cursor-pointer bg-[#eff3f4]' : 'w-full flex items-center justify-between px-[3rem] py-[1rem] cursor-pointer hover:bg-[#eff3f4]'}
+            className={chatIsActive ? 'w-full flex items-center justify-between px-[3rem] py-[1rem] cursor-pointer bg-[#eff3f4]' : 'w-full flex items-center justify-between px-[3rem] py-[1rem] cursor-pointer '}
           >
-            <div>
+            <div 
+            >
                 <img 
                     className='w-[100px] rounded-full h-[100px] object-cover'
                     src={item?.image ? item?.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" } 
@@ -56,10 +72,13 @@ function Chathighlight({chatIsActive , datas}) {
             </div>
             <div className='flex flex-col gap-[0.5rem]'>
                 <p className='text-[1.7rem] font-bold'>{item?.phonenumber}</p>
-                <p className='text-[1.4rem] font-[695] text-[#464b4f]'>{item?.username}</p>
+                {/* <p className='text-[1.4rem] font-[695] text-[#464b4f]'>{item?.username}</p> */}
                {limited?.map((items , i)=> 
-                  <p className='text-[1.7rem] font-[695] text-[#464b4f]'>{items?.text}
-                </p> 
+                  <p 
+                    onClick={()=>handleChat(item?._id)}
+                    className='text-[1.7rem] font-[695] text-[#464b4f]'>
+                    {items?.text}
+                  </p> 
                 )}
 
             </div>
@@ -67,6 +86,7 @@ function Chathighlight({chatIsActive , datas}) {
                 <span>{moment(item?.createdAt).format("MMM Do")}</span>
             </div>
         </div>))}
+       {/* </div> )} */}
       </div>
     </div>
   )

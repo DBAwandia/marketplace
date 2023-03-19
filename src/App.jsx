@@ -18,6 +18,7 @@ import Wishlist from './Components/Wishlist/Wishlist'
 import SearchFilter from './Components/Allcategories/FetchEveryThing/SearchFilter'
 import MyPostAds from './Pages/MyPostAds/MyPostAds'
 import EditAd from './Pages/PostAd/EditAd';
+import MessageChatOpen from "./Pages/Messagechat/MessageChatOpen"
 
 function App() {
 
@@ -45,6 +46,8 @@ function App() {
           <Route path="/wishlist" element={<Wishlist/>} />
           <Route path="/mypostad" element={<MyPostAds/>} />
           <Route path="/editad" element={<EditAd/>} />
+          <Route path="/message" element={<MessageChatOpen/>} />
+
 
 
         </Routes>

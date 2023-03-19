@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { LoginContext } from '../../Context/LoginContext'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -101,8 +101,19 @@ function Login() {
                     </button>
                 </div>
                 <div className='flex text-[#252831] flex-col gap-[0.5rem]'>
-                    <p>Forget password , <span className='cursor-pointer text-[gray]'>Reset</span></p>
-                    <p>No account yet , <span className='cursor-pointer text-[gray]'>Register</span></p>
+                    <p>Forget password , 
+                        <span className='cursor-pointer text-[gray]'>
+                        <Link to="/resetpassword">
+                            Reset
+                        </Link>
+                        </span>
+                    </p>
+                    <p>No account yet , 
+                        <span className='cursor-pointer text-[gray]'>
+                            <Link to="/register">
+                                Register
+                            </Link>
+                        </span></p>
                 </div>
             </div>
         </div>

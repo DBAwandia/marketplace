@@ -1,34 +1,91 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState,useRef, useContext } from 'react'
 import Navbar from '../../Components/Navbar/Navbar'
 import Chathighlight from '../Chathighlight/Chathighlight'
 import Chat from '../Chats/Chat'
 import { useLocation } from "react-router-dom"
 import { LoginContext } from '../../Context/LoginContext'
 import { axiosInstance } from '../../Utils/BaseUrl'
+import { ChatContext } from '../../Context/ChatContext'
 
 function Messagechat() {
+    //CONVERSATION ID
+  const { chatId } = useContext(ChatContext)
+  let converID = chatId
+
     const [ chatIsActive, setChatIsactive ] = useState(false)
     const location = useLocation()
 //   const id = location.state
   const id = location.state?.id[0]
 
-  const [ datas , setDatas ] = useState(null)
+  const [ dataz , setDataz ] = useState(null)
   const { user } = useContext(LoginContext)
-  let datass = datas
+  let datass = dataz
 
   //Fetch conversations
   useEffect(()=>{
     const fetchData = async() =>{
       try{
-        const res = await axiosInstance.get(`/Conversations/conversation/0${user?.phonenumber}`)
-        setDatas(res.data)
+        const res = await axiosInstance.get(`/Conversations/conversation/${user?.phonenumber}`)
+        setDataz(res.data)
       }catch(err){}
     }
     fetchData()
   },[])
 
 
-  console.log(datas)
+  const scrollRef = useRef()
+  const [ txtMsg , setTxtMsg ] = useState("")
+
+//   const scrollToBottom = () => {
+//     scrollRef.current.scrollIntoView({ behavior: "smooth" });
+//   }
+
+//   useEffect(()=>{
+//     scrollToBottom()
+//   },[])
+
+  const [ datas , setDatas ] = useState(null)
+
+  const [ text , setText ] = useState(null)
+
+
+  //UseEffect get friends details
+   useEffect(()=>{
+    const fetchData = async() =>{
+      // const friendID =  datas?.members.find(m => m !== owner)
+
+      try{
+        //  const res =  await axiosInstance.get(`/Users/getUser?QUERY=${friendID}`)
+         const ress = await axiosInstance.get(`/Messages/getMessages/${converID}`)
+         setDatas(ress.data)
+
+      }catch(err){}
+    }
+
+    fetchData()
+
+  },[converID])
+
+
+  //post Message
+  const handleClick  = async() =>{
+      try{
+       const res =  await axiosInstance.post("/Messages/message" , { 
+        
+          converID: conversationID[0] , 
+          senderPhone: phonenumber , 
+          receiverPhone: receiverPhone[0] , 
+          text: txtMsg   
+        })
+
+        console.log(res)
+        alert("success")
+      }catch(err){
+        alert("err")
+      }
+  }
+
+  console.log(datass)
 
   return (
     <div className='relative w-full min-h-screen border-b-2 bg-[#ebf2f7]'>
@@ -54,12 +111,9 @@ function Messagechat() {
                             />
                         )) }
                     </div>
-                    {/* <div className='border-b-2 border-[#e6e3e9]'>
-                        <Chathighlight/>
-                    </div> */}
+                    
                 </div>
 
-            {/* {chatIsActive && */}
                 <div 
                     className='min-h-[calc(100vh-12vh)] hide_scrollbar overflow-y-scroll flex-[0.7] bg-[#f2f2f2]'
                 >
@@ -73,23 +127,7 @@ function Messagechat() {
                 )) }
 
             </div>
-            {/* } */}
-
-            {/* SHOW SVG TO OPEN CHAT IF CHAT !chatIsActive */}
-            {/* {!chatIsActive &&
-                <div className='min-h-[calc(100vh-12vh)] flex-[0.7] bg-[#f2f2f2]'>
-                <div className='w-full grid items-center justify-center h-[100%]'>
-                    <div className='flex flex-col-reverse items-center justify-center gap-[1rem]'>
-                        <p className='text-[2rem] text-[#464b4f] font-[555]'>Select chat to view conversation</p>
-                        <img 
-                            className='w-[35rem] h-[35rem] object-contain rounded-full'
-                            src='https://framerusercontent.com/images/b1l4Ou3URvh0awPRnEE16WodMWk.svg' 
-                            alt='no chat image' 
-                        />
-                    </div>
-                </div>
-            </div>
-            } */}
+           
             </div>
         </div>
       

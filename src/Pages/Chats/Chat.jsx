@@ -6,15 +6,35 @@ import TextChat from './TextChat'
 import { useLocation } from 'react-router-dom'
 import { axiosInstance } from '../../Utils/BaseUrl'
 import { LoginContext } from '../../Context/LoginContext'
+import { ChatContext } from '../../Context/ChatContext'
 
-function Chat({setChatIsactive , dataz }) {
+function Chat({setChatIsactive  }) {
+  const [ datachat , setDatachat ] = useState(null)
 
   //CONVERSATION ID
-  const converID = dataz?._id
+  const { chatId } = useContext(ChatContext)
+  let converID = chatId
 
-  // const converID = dataz?.map((item) => item?._id)
-  console.log(converID)
+  //get 
+   //UseEffect get messages details txt
+   useEffect(()=>{
+    const fetchData = async() =>{
+      // const friendID =  datas?.members.find(m => m !== owner)
 
+      try{
+        //  const res =  await axiosInstance.get(`/Users/getUser?QUERY=${friendID}`)
+        const ress = await axiosInstance.get(`/Messages/getMessages/${chatId}`)
+         setDatachat(ress.data)
+        //  console.log(ress)
+
+      }catch(err){}
+    }
+
+    fetchData()
+  },[converID])
+
+  console.log(datachat)
+  
   const [ data, setData ] = useState(null)
 
   const datass = [data]
@@ -55,7 +75,7 @@ function Chat({setChatIsactive , dataz }) {
 
   return (
     <div className='w-full flex flex-col gap-[3rem]'>
-      {datass?.map((item)=>(
+      {/* {datass?.map((item)=>(
       <div className='flex text-[2rem] items-center justify-between shadow-md bg-[#fff] py-[0.5rem] px-[4rem]'>
         <div className='flex items-center gap-[3.5rem]'>
           <img 
@@ -75,14 +95,15 @@ function Chat({setChatIsactive , dataz }) {
           <BsFillFlagFill className='text-[#ef4444]'/>
           <GrClose onClick={()=>setChatIsactive(false)}/>
         </div>
-      </div>))}
+      </div>))} */}
 
       <div>
-       {/* {converID?.map((item)=>  */}
+       {datachat?.map((item)=> 
         <TextChat
-          converID={converID}
+        itemz={item}
+          // converID={converID}
         /> 
-         {/* )} */}
+         )}
       </div>
 
     </div>

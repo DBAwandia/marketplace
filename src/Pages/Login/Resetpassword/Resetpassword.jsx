@@ -1,5 +1,6 @@
 import React from 'react'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
+import { Link } from 'react-router-dom'
 
 function Resetpassword() {
   return (
@@ -60,7 +61,12 @@ function Resetpassword() {
             </button>
         </div>
         <div className='flex text-[#252831] flex-col gap-[0.5rem]'>
-            <p>Remembered password , <span className='cursor-pointer text-[gray]'>Login</span></p>
+            <p>Remembered password , 
+                <span className='cursor-pointer text-[gray]'>
+                    <Link to="/login">
+                        Login
+                    </Link>
+                </span></p>
         </div>
     </div>
     </div>

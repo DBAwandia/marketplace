@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { axiosInstance } from "../../Utils/BaseUrl"
@@ -141,7 +141,13 @@ function Register() {
                     {loading ? "Loading...": "Register"}
                 </button>
             </div>
-        <p>Have account , <span className='cursor-pointer text-[gray] font-bold'>Login</span></p>
+        <p>Have account , 
+            <span className='cursor-pointer text-[gray] font-bold'>
+                <Link to="/login">
+                    Login
+                </Link>
+            </span>
+        </p>
 
         </div>
         </div>
