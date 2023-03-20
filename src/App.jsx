@@ -8,7 +8,6 @@ import AllBestSellers from './Components/Allcategories/AllBestSellers/AllBestSel
 import AllNewArrivals from './Components/Allcategories/AllNewSale/AllNewArrivals'
 import AllPhones from './Components/Allcategories/FetchEveryThing/AllPhones'
 import Product from './Components/Productpage/Product'
-import Messagechat from './Pages/Messagechat/Messagechat'
 import PostAd from './Pages/PostAd/PostAd'
 import Logout from './Pages/Logout/Logout'
 import Login from './Pages/Login/Login'
@@ -18,7 +17,7 @@ import Wishlist from './Components/Wishlist/Wishlist'
 import SearchFilter from './Components/Allcategories/FetchEveryThing/SearchFilter'
 import MyPostAds from './Pages/MyPostAds/MyPostAds'
 import EditAd from './Pages/PostAd/EditAd';
-import MessageChatOpen from "./Pages/Messagechat/MessageChatOpen"
+import Messages from './Messages/Messages';
 
 function App() {
 
@@ -38,7 +37,6 @@ function App() {
           <Route path="/all" element={<AllPhones/>} />
           <Route path="/search" element={<SearchFilter/>} />
           <Route path="/product/:id" element={<Product/>} />
-          <Route path="/chat" element={<Messagechat/>} />
           <Route path="/post" element={<PostAd/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/register" element={<Register/>} />
@@ -46,7 +44,7 @@ function App() {
           <Route path="/wishlist" element={<Wishlist/>} />
           <Route path="/mypostad" element={<MyPostAds/>} />
           <Route path="/editad" element={<EditAd/>} />
-          <Route path="/message" element={<MessageChatOpen/>} />
+          <Route path="/messages" element={<Messages/>} />
 
 
 
