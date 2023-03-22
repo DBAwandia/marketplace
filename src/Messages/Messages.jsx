@@ -9,6 +9,19 @@ import { axiosInstance } from "../Utils/BaseUrl"
 function Messages() {
     const [ conversation , setConversation ] = useState(null)
     const [ messages , setMessages ] = useState(null)
+    const [ newMessage , setNewMessage ] = useState("")
+    const [ loading , setLoading ] = useState(false)
+    const [ enableButton , setEnableButton ] = useState(false)
+
+    useEffect(()=>{
+        if(newMessage.length < 1){
+            setEnableButton(true)
+        }else{
+            setEnableButton(false)
+        }
+    
+    },[newMessage])
+
 
     //get current chat id with onClick
     const [currentChat, setCurrentChat] = useState(null);
@@ -52,6 +65,25 @@ function Messages() {
 
     },[phonenumber])
 
+    //send message
+    const sendMessage = async (e) =>{
+        setLoading(true)
+        try{
+          await axiosInstance.post("/Messages/message" , {
+                text: newMessage,
+                senderPhone: phonenumber,
+                converID: currentChat?._id
+            })
+            setTimeout(()=>{
+                setLoading(false)
+            }, 2500)
+
+        }catch(err)
+        {
+            setLoading(false)
+        }
+    }
+
    
 
   return (
@@ -80,7 +112,21 @@ function Messages() {
                     ))}
 
             </div>
-            <div className='flex flex-col gap-2 flex-[0.7]'>
+          {!currentChat &&  
+            <div className='w-full bg-[#f6f6f6] min-h-[calc(100vh-14.3vh)] grid items-center justify-center flex-[0.7]'>
+                <div className=' flex flex-col gap-[4rem] items-center'>
+                    <img
+                        className='h-[520px] w-[650px] object-cover '
+                        src='https://assets.jiji.co.ke/static/img/profile/messenger-girl.svg'
+                        alt=''
+                    
+                    />
+                    <p className='text-[2rem] text-[#464b4f] ml-[9.4rem]'>Select a chat to view conversation</p>
+                </div>
+            </div>}
+                  
+            {currentChat &&
+             <div className='flex flex-col gap-2 flex-[0.7]'>
                 <div className=' bg-[#f2f2f2] h-[100%] overflow-y-scroll'>
                     <h1 className='text-center mt-[4rem] text-[#5f6368] font-bold text-[2.5rem]'>Do not pay in advance including transport fee</h1>
 
@@ -95,21 +141,25 @@ function Messages() {
                 </div>
                 <div className=' bg-[#f0f2f5] relative mb-[1rem]'>
                     <input 
+                        onChange={(e)=>setNewMessage(e.target.value)}
                         className='text-[2rem] w-full h-[10vh] pl-[5rem] bg-[#f0f2f5]'
                         type="text"
                         placeholder='Send message'
                     />
                     <div className='absolute cursor-pointer right-[5rem] text-[#54656f] top-[2rem] flex gap-[4rem] items-center'>
                         <FiImage className='text-[3rem]'/>
-                        <button className='text-[1.6rem] w-[8rem] text-[black] h-[4rem] font-[555] bg-[#8484cc] rounded-2xl'>
-                            Send
+                        <button 
+                            disabled={enableButton}
+                            onClick={sendMessage}
+                            className='text-[1.6rem] w-[8rem] text-[black] h-[4rem] font-[555] bg-[#8484cc] rounded-2xl'
+                        >
+                            {loading ? "Sending" : "Send"}
                         </button>
                     </div>
 
                 </div>
+            </div>}
             </div>
-        </div>
-      
     </div>
   )
 }

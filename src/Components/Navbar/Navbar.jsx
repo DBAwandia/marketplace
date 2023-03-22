@@ -17,7 +17,7 @@ function Navbar() {
 
   //start chat
   const navigateToChat = ()=>{
-    navigate("/chat")
+    navigate("/messages")
   }
 
   //post ad || advertise

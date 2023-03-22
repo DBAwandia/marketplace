@@ -9,6 +9,7 @@ import { axiosInstance } from "../../Utils/BaseUrl"
 function Login() {
     const [ error , setError ] = useState(false)
     const [ showPassword, setShowPassword ] = useState(false)
+    const [ showImage, setShowImage ] = useState(false)
     const [ password, setPassword ] = useState("")
     const [ phonenumber, setPhonenumber ] = useState("")
 
@@ -28,10 +29,12 @@ function Login() {
                 })
                 dispatch({type: "LOGIN_SUCCESS" , payload: res.data.details})
                 toast.success("Login sucess")
+                setShowImage(true)
                 setTimeout(()=>{
                     navigate("/")
-                },3200)
+                },5500)
             }catch(err){
+                setShowImage(false)
                 dispatch({type: "LOGIN_FAIL"})
                 toast.error(err.response.data)
             }
@@ -50,7 +53,18 @@ function Login() {
             draggable
             pauseOnHover
         />
-        <div className='w-[50rem] min-h-0 bg-[white] text-[2rem] shadow-2xl rounded-2xl'>
+        {showImage && 
+        <div className='w-full h-full'>
+                 <img
+                    className='h-[100vh] w-[100%] object-fill'
+                    src='https://static.vecteezy.com/system/resources/previews/004/672/776/original/flash-sale-banner-design-template-offer-shopping-on-blue-and-pink-background-free-vector.jpg'
+                    alt=''
+                
+                />
+        </div>}
+
+       {!showImage && 
+       <div className='w-[50rem] min-h-0 bg-[white] text-[2rem] shadow-2xl rounded-2xl'>
             <div className='flex flex-col gap-[2rem] pb-[5rem] pt-[2rem] px-[3rem]'>
                 <div className='self-center text-[3rem] font-bold'>
                     <h1>Login</h1>
@@ -116,7 +130,7 @@ function Login() {
                         </span></p>
                 </div>
             </div>
-        </div>
+        </div>}
 </div>
   )
 }
