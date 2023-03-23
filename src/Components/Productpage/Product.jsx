@@ -15,16 +15,23 @@ function Product() {
     const [ sendMessage , setSendMessage ] = useState(false)
     const [ text , setText ] = useState("")
     const [ data, setData ] = useState(null)
+    const [ checkIfConversationExist, setCheckIfConversationExist ] = useState(null)
+
+    //IF YOU HAD CHATED WITH SELLER BEFORE
+    const [ memberSeller, setMemberSeller ] = useState(null)
+
+
+    const { user } = useContext(LoginContext)
+    const phonenumber = user?.phonenumber
+
     const productData = [data]
 
     //product id
     const location = useLocation()
-
     //passed as prop at ProductDetails component
     const itemId = location.pathname.split("/")[2]
 
-    const { user } = useContext(LoginContext)
-    const phonenumber = user?.phonenumber
+  
 
     //GET POST BY ID
     useEffect(()=>{
@@ -44,6 +51,19 @@ function Product() {
 
     // console.log( productID[0])
 
+     // check if seller and buyer are in member Array
+     useEffect(()=>{
+      try{
+        const getMemberID = checkIfConversationExist?.map((item) => item?.members?.find((item) => item !== phonenumber?.toString()))
+        setMemberSeller(getMemberID?.find(item => item === sellerNumber[0]?.toString()))
+
+        
+      }catch(err){
+
+      }
+    }, [checkIfConversationExist])
+
+
     //Trim description to first 15 letters
     let description = productData && productData.map((item) => item?.description)
     let maxLength = 50 // maximum number of characters to extract
@@ -53,35 +73,8 @@ function Product() {
     //PRODUCT ID
     let id = productData && productData.map((item) => item?._id)
     
-    //startchat
-    const startMessage = ()=>{
-      setSendMessage(true)
-    }
-
-    //sendMessage
-    const sendTxtMessage = async (id)=>{
-      setSendMessage(false)
-      try{
-        
-      const ress =  await axiosInstance.post("/Conversations/conversation", {senderPhone:phonenumber , receiverPhone:sellerNumber[0]})
-      const conversationID = ress.data._id 
-
-      await axiosInstance.post("/Messages/message" , { 
-        
-            converID:conversationID ,
-            productID: productIDs, 
-            senderPhone:phonenumber , 
-            receiverPhone:sellerNumber[0] , 
-            text: text   
-          })
-        navigate("/chat" , { state: { id: id }  })
-
-      }catch(err){}
-
-    }
-
-    //Call
-    const handleClick = async ()=>{
+      //Call
+      const handleClick = async ()=>{
         setSellersContact(true)
     }
 
@@ -89,6 +82,63 @@ function Product() {
     const requestCall = async ()=>{
         alert("success 💚")
     }
+
+    //startchat
+    const startMessage = ()=>{
+      if(memberSeller){
+        setSendMessage(false)
+        navigate("/messages" , { state: checkIfConversationExist  })
+
+      }else{
+        setSendMessage(true)
+      }
+    }
+
+    // console.log(memberSeller , sellerNumber[0])
+
+    //sendMessage
+    const sendTxtMessage = async (id)=>{
+      setSendMessage(false)
+      try{
+        const ress =  await axiosInstance.post("/Conversations/conversation", {senderPhone:phonenumber , receiverPhone:sellerNumber[0]})
+        const conversationID = ress?.data?._id 
+
+      //Check if conversation exist to avoid duplicates conversation
+      if(memberSeller){ 
+        setSendMessage(false)
+        navigate("/messages" , { state: checkIfConversationExist  })
+
+      }else{
+          const res = await axiosInstance.post("/Messages/message" , { 
+          
+            converID:conversationID ,
+            // productID: productIDs, 
+            senderPhone:phonenumber , 
+            text: text   
+          })
+        navigate("/messages" , { state: res?.data  })
+      }
+
+      }catch(err){}
+
+    }
+
+
+    //CHECK IF CONVERSATION EXIST BEFORE CREATING NEW CONVERSATION
+    useEffect(()=>{
+      const getConversation = async () =>{
+
+        try{
+          const res = await axiosInstance.get(`/Conversations/conversation/${phonenumber}`)
+          setCheckIfConversationExist(res?.data)
+          
+        }catch(err){}
+      }
+      getConversation()
+      
+    }, [sellerNumber[0]])
+    
+
   return (
     <div className='w-full bg-[#f5f5f5]'>
         <div>
@@ -102,7 +152,7 @@ function Product() {
     >
       <div className='flex-[0.35]'>
         <img 
-            className='w-fill h-[70vh] object-cover'
+            className='w-full h-[70vh] object-cover'
             src={item?.image} 
             alt="phone palace product" 
         />
@@ -153,15 +203,16 @@ function Product() {
                     </a>
                     
                     {sendMessage && 
-                    <div className='flex items-center justify-between'>
-                    <p className='text-[2rem] font-[555]'>Your message</p>
-                    <div 
-                      className='relative cursor-pointer py-[1.4rem]'
-                      onClick={()=>{setSendMessage(false)}}
-                    >
-                      <GrClose className="absolute right-[0.3rem] top-0 text-[gray] text-[2rem]"/>
-                    </div>
-                    </div>}
+                      <div className='flex items-center justify-between'>
+                        <p className='text-[2rem] font-[555]'>Your message</p>
+                        <div 
+                          className='relative cursor-pointer py-[1.4rem]'
+                          onClick={()=>{setSendMessage(false)}}
+                        >
+                          <GrClose className="absolute right-[0.3rem] top-0 text-[gray] text-[2rem]"/>
+                        </div>
+                      </div>}
+
                     {sendMessage && 
                     <div className='w-full h-[6rem] rounded-md text-[2rem]'>
                       <input 
@@ -171,6 +222,7 @@ function Product() {
                         placeholder='Say hello  👋' 
                       />
                     </div>}
+
                     {sendMessage && 
                     <div 
                       className='text-[white] bg-[#fea03c] flex text-[2rem] gap-[2rem] items-center justify-center w-full h-[6rem] font-[555] rounded-md cursor-pointer'
@@ -178,13 +230,15 @@ function Product() {
                     >
                       <p>Send text</p>
                     </div>}
+
                     {!sendMessage && <div 
                       className='text-[white] bg-[#5d1b8f] flex text-[2rem] gap-[2rem] items-center justify-center w-full h-[6rem] font-medium border-solid rounded-md border-2 border-[#772ab3] cursor-pointer'
-                      onClick={startMessage}
+                        onClick={startMessage}
                       >
                       <BiMessageDetail className='text-[3rem]'/>
                       <p>Start message</p>
                     </div>}
+                    
                   </div>
         </div>
 

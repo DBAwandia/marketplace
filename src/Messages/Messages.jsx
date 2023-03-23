@@ -5,13 +5,18 @@ import Message from "../Messages/Message/Message"
 import { FiImage } from "react-icons/fi"
 import { LoginContext } from '../Context/LoginContext'
 import { axiosInstance } from "../Utils/BaseUrl"
+import { useLocation } from 'react-router-dom'
 
 function Messages() {
     const [ conversation , setConversation ] = useState(null)
     const [ messages , setMessages ] = useState(null)
+    const [ messagesFromProduct , setMessagesFromProduct ] = useState(null)
     const [ newMessage , setNewMessage ] = useState("")
     const [ loading , setLoading ] = useState(false)
     const [ enableButton , setEnableButton ] = useState(false)
+    const location = useLocation()
+    const conversationIdFromProduct = location?.state?.consversationID
+    console.log(messagesFromProduct)
 
     useEffect(()=>{
         if(newMessage.length < 1){
@@ -51,6 +56,21 @@ function Messages() {
   
       getMessages()
   }, [currentChat?._id])
+
+   //fetch messages from product directCHAT
+   useEffect(()=>{
+    const getMessagesFromProduct = async () =>{
+        try{
+            const res = await axiosInstance.get(`/Messages/getMessages/${conversationIdFromProduct}`)
+            localStorage.setItem("conversationIDFromChat" , conversationIdFromProduct)
+            setMessagesFromProduct(res.data)
+            
+        }catch(err){}
+    }
+
+    getMessagesFromProduct()
+
+}, [conversationIdFromProduct])
 
     //fetch conversations
     useEffect(()=>{
