@@ -1,6 +1,8 @@
 import React from 'react'
 import { Navigation, Pagination,Autoplay, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -60,7 +62,8 @@ function HeroSection() {
                         className='flex flex-col gap-1 relative'
                         key={item?.id}
                     >
-                    <img 
+                    <LazyLoadImage 
+                        effect='blur'
                         className='w-[100%] h-[72vh] object-fill  bg-cover'
                         src={item?.image} 
                         alt="farmland image" 

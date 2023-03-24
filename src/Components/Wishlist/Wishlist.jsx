@@ -5,7 +5,8 @@ import { LoginContext } from '../../Context/LoginContext'
 import { axiosInstance } from '../../Utils/BaseUrl'
 import { Link, useNavigate } from 'react-router-dom'
 import { MdDelete } from "react-icons/md"
-
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 function Wishlist() {
     const [ data, setData ] = useState(null)
@@ -53,13 +54,13 @@ function Wishlist() {
             <Navbar/>
         </div>
         <div className='min-h-0 m-auto w-[60%] mt-[5rem] mb-[5rem] pt-[3rem] flex flex-col gap-[3rem] items-center text-[2rem] bg-[#ffffff] border-2 rounded-2xl shadow-2xl'>
-                <div className='w-full text-center py-[2rem] text-[3rem]  font-bold text-[black]  border-b-2 border-[#dae2e7]'>
-                    <h1>My wishlist items  😊💚      ( {" " +data?.length} )</h1>
+                <div className='w-full text-center font-[sans-serif] py-[2rem] text-[3rem]  font-bold text-[black]  border-b-2 border-[#dae2e7]'>
+                    <h1>My wishlist items  💚      ( {" " +data?.length} )</h1>
                 </div>
            {data?.length < 1 ? 
             <div className='w-full h-[calc(100vh-40vh)] grid items-center justify-center cursor-default'>
                 <Link to="/">
-                    <h2 className='text-[3rem] font-extrabold text-[#6c8ea0]'>No items found ,Continue searching</h2>
+                    <h2 className=' text-[3rem] font-extrabold text-[#6c8ea0]'>No items found ,  click here</h2>
                 </Link>
             </div>
             :
@@ -76,7 +77,8 @@ function Wishlist() {
                     onClick={()=>handleClick(item?._id)}
                     className='flex-[0.4]'
                 >
-                    <img 
+                    <LazyLoadImage
+                        effect='blur' 
                         className='w-[1200px] h-[355px] object-cover'
                         src={item?.image} 
                         alt='image phoneplace' 
@@ -103,9 +105,9 @@ function Wishlist() {
                 <div className='flex flex-col gap-[2rem] right-[2rem] bottom-[2rem] absolute'>
                     <div className='border-2 rounded-lg border-[#00b53f] hover:border-[#1bd462] w-[20rem] h-[6rem] '>
                         <button onClick={()=>{
-                            navigate("/chat")
+                            navigate(`/product/${item?._id}`)
                         }} className='border-[#00b53f] w-[20rem] h-[6rem]'>
-                            Chat
+                            Purchase
                         </button>
                     </div>
                     <button className='border-[#00b53f] rounded-lg w-[20rem] h-[6rem] bg-[#00b53f] text-[white]'>

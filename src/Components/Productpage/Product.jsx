@@ -8,6 +8,9 @@ import Footer from "../../Components/Footer/Footer"
 import { useLocation, useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../../Utils/BaseUrl'
 import { LoginContext } from '../../Context/LoginContext'
+import { ChatContext } from '../../Context/ChatContext'
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 function Product() {
     const navigate = useNavigate()
@@ -16,6 +19,9 @@ function Product() {
     const [ text , setText ] = useState("")
     const [ data, setData ] = useState(null)
     const [ checkIfConversationExist, setCheckIfConversationExist ] = useState(null)
+
+    //if member store conversation UD to local storage
+    const { dispatch } = useContext(ChatContext)
 
     //IF YOU HAD CHATED WITH SELLER BEFORE
     const [ memberSeller, setMemberSeller ] = useState(null)
@@ -87,35 +93,36 @@ function Product() {
     const startMessage = ()=>{
       if(memberSeller){
         setSendMessage(false)
-        navigate("/messages" , { state: checkIfConversationExist  })
+        dispatch({type: "OPENS" , payload: memberSeller})
+        navigate("/messages")
 
       }else{
         setSendMessage(true)
       }
     }
 
-    // console.log(memberSeller , sellerNumber[0])
 
     //sendMessage
     const sendTxtMessage = async (id)=>{
       setSendMessage(false)
       try{
-        const ress =  await axiosInstance.post("/Conversations/conversation", {senderPhone:phonenumber , receiverPhone:sellerNumber[0]})
+        const ress = await axiosInstance.post("/Conversations/conversation", {senderPhone:phonenumber , receiverPhone:sellerNumber[0]})
         const conversationID = ress?.data?._id 
 
       //Check if conversation exist to avoid duplicates conversation
       if(memberSeller){ 
         setSendMessage(false)
-        navigate("/messages" , { state: checkIfConversationExist  })
+        dispatch({type: "OPENS" , payload: memberSeller})
+        navigate("/messages" )
 
       }else{
           const res = await axiosInstance.post("/Messages/message" , { 
-          
             converID:conversationID ,
             // productID: productIDs, 
             senderPhone:phonenumber , 
             text: text   
           })
+        dispatch({type: "OPENS" , payload: memberSeller})
         navigate("/messages" , { state: res?.data  })
       }
 
@@ -151,7 +158,8 @@ function Product() {
         className="bg-[white] h-auto px-[2rem] shadow-2xl py-[2rem] pb-[5rem] flex gap-[4rem] flex-[1]"
     >
       <div className='flex-[0.35]'>
-        <img 
+        <LazyLoadImage 
+            effect='blur'
             className='w-full h-[70vh] object-cover'
             src={item?.image} 
             alt="phone palace product" 

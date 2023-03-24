@@ -5,7 +5,8 @@ import { BsBookmark,BsBookmarkCheckFill } from "react-icons/bs"
 import { data } from '../../../dummyData/DummyData'
 import  { HiLocationMarker} from "react-icons/hi"
 import { useNavigate } from 'react-router-dom'
-
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 function BestSelling() {
   const [ isAdded, setIsAdded ] = useState(false)
@@ -61,7 +62,8 @@ function BestSelling() {
                    />
                   </div>}
                 </div>
-                <img
+                <LazyLoadImage
+                  effect='blur'
                   className='w-[30rem] h-[25rem] object-cover'
                   src={item?.image}
                   alt="phonesfarm phone"

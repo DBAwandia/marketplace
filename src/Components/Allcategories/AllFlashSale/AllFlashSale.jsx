@@ -7,6 +7,8 @@ import Footer from "../../Footer/Footer"
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../../../Utils/BaseUrl'
 import { LoginContext } from '../../../Context/LoginContext'
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 function Allcategories() {
   const [remainingTime, setRemainingTime] = useState(0);
@@ -120,7 +122,7 @@ function Allcategories() {
   
   return (
     <div className='relative w-full min-h-screen flex flex-col gap-[3rem]'>
-        <div className='sticky top-0 z-[99999999999999999999999]'>
+        <div className='sticky top-0 z-[99999999999999999999999999999999]'>
           <Navbar/>
         </div>
       <div>
@@ -144,14 +146,14 @@ function Allcategories() {
             aria-label='Save'
 
           >
-                <div className='absolute hover:shadow-inner grid items-center justify-center top-[2rem] right-[2rem] bg-white w-[6rem] h-[6rem] rounded-full shadow-2xl'>
+                <div className='absolute z-[9999999] hover:shadow-inner grid items-center justify-center top-[2rem] right-[2rem] bg-white w-[6rem] h-[6rem] rounded-full shadow-2xl'>
                     {wishlist?.find((items) => items === item._id) && 
                     <div
                         onClick={()=>removeWishList(item?._id)}
                     >
                         <BsBookmarkCheckFill  
                           aria-label="Save"
-                          className='text-[3rem] text-[#8529cd]'
+                          className='text-[3rem] mt-[0.8rem] text-[#8529cd]'
                         />
                       </div>}
 
@@ -174,8 +176,9 @@ function Allcategories() {
                      } 
                 </div>
 
-            <img
-              className='w-[30rem] h-[25rem] object-cover'
+            <LazyLoadImage
+              effect='blur'
+              className='w-[30rem] z-[4] h-[25rem] object-cover'
               src={item?.image}
               alt="phonesfarm phone"
             />

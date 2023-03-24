@@ -5,6 +5,8 @@ import  { HiLocationMarker} from "react-icons/hi"
 // import { data } from '../../../dummyData/DummyData'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../../../Utils/BaseUrl'
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 function Flashsales() {
   const [remainingTime, setRemainingTime] = useState(0);
@@ -135,7 +137,8 @@ function Flashsales() {
                   <h2>Sold Out</h2>
                 </div>}
 
-                <img
+                <LazyLoadImage
+                  effect='blur'
                   className='w-[30rem] h-[25rem] object-cover'
                   src={item?.image}
                   alt="phonesfarm phone"

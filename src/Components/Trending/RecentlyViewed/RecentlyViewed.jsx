@@ -7,6 +7,8 @@ import  { HiLocationMarker} from "react-icons/hi"
 import { Link, useNavigate } from 'react-router-dom'
 import { LoginContext } from '../../../Context/LoginContext'
 import { axiosInstance } from '../../../Utils/BaseUrl'
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 
 function RecentlyViewed() {
@@ -88,7 +90,8 @@ function RecentlyViewed() {
                 className='relative flex flex-col gap-[0.7rem] text-[2rem] border-2 hover:shadow-2xl hover:border-0 px-[2.5rem] py-[1.5rem]'
                 onClick={()=>handleClick(item?._id)}
               >
-                <img
+                <LazyLoadImage
+                  effect='blur'
                   className='w-[30rem] h-[25rem] object-cover'
                   src={item?.image}
                   alt="phonesfarm phone"

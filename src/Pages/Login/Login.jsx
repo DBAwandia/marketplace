@@ -5,6 +5,8 @@ import { LoginContext } from '../../Context/LoginContext'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { axiosInstance } from "../../Utils/BaseUrl"
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 function Login() {
     const [ error , setError ] = useState(false)
@@ -55,7 +57,8 @@ function Login() {
         />
         {showImage && 
         <div className='w-full h-full'>
-                 <img
+                 <LazyLoadImage
+                    effect='blur'
                     className='h-[100vh] w-[100%] object-fill'
                     src='https://static.vecteezy.com/system/resources/previews/004/672/776/original/flash-sale-banner-design-template-offer-shopping-on-blue-and-pink-background-free-vector.jpg'
                     alt=''

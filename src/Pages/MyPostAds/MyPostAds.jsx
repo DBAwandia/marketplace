@@ -5,7 +5,8 @@ import Footer from '../../Components/Footer/Footer'
 import Navbar from '../../Components/Navbar/Navbar'
 import { LoginContext } from '../../Context/LoginContext'
 import { axiosInstance } from '../../Utils/BaseUrl'
-
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 function MyPostAds() {
     const [ data, setData ] = useState(null)
@@ -84,7 +85,8 @@ function MyPostAds() {
                  className='relative flex cursor-default  border-[#ebf2f7] items-center gap-[2.6rem] flex-[1] p-[3rem] hover:bg-[#f6f9fc]'
                 >
                 <div className='flex-[0.4]'>
-                    <img 
+                    <LazyLoadImage
+                        effect='blur' 
                         className='w-[1200px] h-[355px] object-cover'
                         src={item?.image} 
                         alt='image phoneplace' 

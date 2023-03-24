@@ -8,6 +8,8 @@ import { axiosInstance } from "../../../Utils/BaseUrl"
 import { LoginContext } from "../../../Context/LoginContext"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 function AllPhones() {
   // const [ isAdded, setIsAdded ] = useState(false)
@@ -120,14 +122,14 @@ function AllPhones() {
             className='relative flex flex-col gap-[0.7rem] text-[2rem] border-2 px-[2.5rem] py-[1.5rem]'
             aria-label='Save'
           >
-              <div className='absolute hover:shadow-inner grid items-center justify-center top-[2rem] right-[2rem] bg-white w-[6rem] h-[6rem] rounded-full shadow-2xl'>
+              <div className='absolute z-[99999] hover:shadow-inner grid items-center justify-center top-[2rem] right-[2rem] bg-white w-[6rem] h-[6rem] rounded-full shadow-2xl'>
                 {wishlist?.find((items) => items === item._id) && 
                 <div
                     onClick={()=>removeWishList(item?._id)}
                 >
                     <BsBookmarkCheckFill  
                       aria-label="Save"
-                      className='text-[3rem] text-[#8529cd]'
+                      className='text-[3rem] mt-[0.9rem] text-[#8529cd]'
                     />
                   </div>}
 
@@ -148,7 +150,8 @@ function AllPhones() {
                   </div>}
                 </div>
 
-            <img
+            <LazyLoadImage
+              effect='blur'
               className='w-[30rem] h-[25rem] object-cover'
               src={item?.image}
               alt="phonesfarm phone"

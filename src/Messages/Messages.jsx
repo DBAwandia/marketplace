@@ -6,6 +6,7 @@ import { FiImage } from "react-icons/fi"
 import { LoginContext } from '../Context/LoginContext'
 import { axiosInstance } from "../Utils/BaseUrl"
 import { useLocation } from 'react-router-dom'
+import { ChatContext } from '../Context/ChatContext'
 
 function Messages() {
     const [ conversation , setConversation ] = useState(null)
@@ -16,8 +17,11 @@ function Messages() {
     const [ enableButton , setEnableButton ] = useState(false)
     const location = useLocation()
     const conversationIdFromProduct = location?.state?.consversationID
-    console.log(messagesFromProduct)
 
+    //GET CHAT MEMBER AFTER PRODUCT CLICK ON PRODUCT DETAILS PAGE
+    const { chatId ,dispatch } = useContext(ChatContext)
+
+    //disable button on empty input
     useEffect(()=>{
         if(newMessage.length < 1){
             setEnableButton(true)
@@ -33,6 +37,7 @@ function Messages() {
 
     //GET CONVERSATIONID
     const getConversationID = async(id) =>{
+        dispatch({type:"CLOSES"})
         setCurrentChat(id)
 
     }
@@ -123,6 +128,7 @@ function Messages() {
                         }
                         >
                         <Conversation
+                            sellerContact={chatId}
                             conversation={item}
                             own={user}
 
