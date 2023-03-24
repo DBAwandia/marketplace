@@ -18,6 +18,7 @@ import SearchFilter from './Components/Allcategories/FetchEveryThing/SearchFilte
 import MyPostAds from './Pages/MyPostAds/MyPostAds'
 import EditAd from './Pages/PostAd/EditAd';
 import Messages from './Messages/Messages';
+import LoadingSpinner from './LoadingSpinner/LoadingSpinner';
 
 function App() {
 
@@ -44,6 +45,7 @@ function App() {
           <Route path="/wishlist" element={<Wishlist/>} />
           <Route path="/mypostad" element={<MyPostAds/>} />
           <Route path="/editad" element={<EditAd/>} />
+          <Route path="/loading" element={<LoadingSpinner/>} />
           <Route path="/messages" element={<Messages/>} />
 
 

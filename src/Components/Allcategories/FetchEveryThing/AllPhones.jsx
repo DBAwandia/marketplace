@@ -10,6 +10,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import LoadingSpinner from '../../../LoadingSpinner/LoadingSpinner'
 
 function AllPhones() {
   // const [ isAdded, setIsAdded ] = useState(false)
@@ -19,15 +20,21 @@ function AllPhones() {
   const name = location.state?.toString()
   const { user } = useContext(LoginContext)
   const navigate = useNavigate()
+  const [ loading ,setLoading ] = useState(false)
+
 
   //get all posts
   useEffect(() => {
     const fetchData = async()=>{
       // setPosts(JSON.parse(localStorage.getItem("getPost")))
+      setLoading(true)
       try{
         const res = await axiosInstance.get("/Posts/getallposts")
         // localStorage.setItem("getPost" ,JSON.stringify(res.data))
-        setPosts(res.data)
+        setTimeout(()=>{
+          setPosts(res?.data)
+          setLoading(false)
+        },2500)
       }catch(err){
         // setPosts(JSON.parse(localStorage.getItem("getPost")))
 
@@ -103,12 +110,17 @@ function AllPhones() {
       <div className='sticky top-0 z-[99999999999999999999999]'>
         <Navbar/>
       </div>
+      {loading && 
+        <div className='absolute left-[48%] top-[55rem] '>
+          <LoadingSpinner/>
+        </div>
+         }
       {length === 0 ?
           <div className="w-full bg-[#ebf2f7] text-[#464b4f] h-screen grid justify-center items-center">
             <div className="text-center  text-[3rem] font-bold">
-              <h1>
+             {!loading && <h1>
                 Unfortunately, we did not find anything that matches these criteria.
-              </h1>
+              </h1>}
             </div>
           </div> 
           :

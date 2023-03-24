@@ -9,11 +9,13 @@ import { axiosInstance } from '../../../Utils/BaseUrl'
 import { LoginContext } from '../../../Context/LoginContext'
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import LoadingSpinner from '../../../LoadingSpinner/LoadingSpinner'
 
 function Allcategories() {
   const [remainingTime, setRemainingTime] = useState(0);
   const [ data, setData ] = useState(null)
   const [ wishlist, setWishlist ] = useState(null)
+  const [ loading ,setLoading ] = useState(false)
   const { user } = useContext(LoginContext)
 
   const datas = data
@@ -23,10 +25,15 @@ function Allcategories() {
   //get all posts ads
   useEffect(()=>{
     const fetchData = async() =>{
+      setLoading(true)
       try{
         const res = await axiosInstance.get("/Posts/getallposts")
-        setData(res?.data)
-      }catch(err){}
+        setTimeout(()=>{
+          setData(res?.data)
+          setLoading(false)
+        },2000)
+      }catch(err){
+      }
 
     }
     fetchData()
@@ -125,6 +132,11 @@ function Allcategories() {
         <div className='sticky top-0 z-[99999999999999999999999999999999]'>
           <Navbar/>
         </div>
+        {loading && 
+        <div className='absolute left-[48%] top-[27.5rem] '>
+          <LoadingSpinner/>
+        </div>
+         }
       <div>
           <div className='w-full grid items-center justify-start px-[2rem]  h-[8rem]  text-[white] text-[2rem] bg-[#e61601]'>
                 <h1  className='text-[2.4rem]'>

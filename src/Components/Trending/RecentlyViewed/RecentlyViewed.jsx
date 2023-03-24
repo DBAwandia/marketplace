@@ -9,10 +9,11 @@ import { LoginContext } from '../../../Context/LoginContext'
 import { axiosInstance } from '../../../Utils/BaseUrl'
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import LoadingSpinner from '../../../LoadingSpinner/LoadingSpinner'
 
 
 function RecentlyViewed() {
-  const [ isAdded, setIsAdded ] = useState(false)
+  const [ loading ,setLoading ] = useState(false)
   const [ data, setData ] = useState(null)
 
   const { user } = useContext(LoginContext)
@@ -23,11 +24,15 @@ function RecentlyViewed() {
   //fetch wishlist items
   useEffect(()=>{
       const fetchData = async() =>{
+        setLoading(true)
           // setData(JSON.parse(localStorage.getItem("fetchWishItems")))
           try{
               const res = await axiosInstance.get(`/Posts/wishlistItems?QUERY=${username}`)
               localStorage.setItem("recentAdmired" ,JSON.stringify(res.data))
-              setData(res.data)
+              setTimeout(()=>{
+                setData(res.data)
+                setLoading(false)
+              },3000)
 
           }catch(err){
               setData(JSON.parse(localStorage.getItem("recentAdmired")))
@@ -53,7 +58,12 @@ function RecentlyViewed() {
   //  console.log(trimmedString)
   
   return (
-    <div className='w-full min-h-[40rem] bg-white shadow-2xl rounded-2xl'>
+    <div className='relative w-full min-h-[40rem] bg-white shadow-2xl rounded-2xl'>
+      {loading && 
+        <div className='absolute left-[48%] top-[18.5rem] '>
+          <LoadingSpinner/>
+        </div>
+         }
         <div className='w-full flex flex-col gap-[0.5rem]'>
             <div className='w-full flex justify-between items-center px-[2rem]  h-[8rem]  text-[#8529cd] text-[2rem] bg-[#fff]'>
                 <div>

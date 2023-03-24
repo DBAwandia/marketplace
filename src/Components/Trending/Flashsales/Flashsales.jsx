@@ -7,24 +7,26 @@ import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../../../Utils/BaseUrl'
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import LoadingSpinner from '../../../LoadingSpinner/LoadingSpinner'
 
 function Flashsales() {
   const [remainingTime, setRemainingTime] = useState(0);
   const [ posts, setPosts ] = useState(null)
+  const [ loading ,setLoading ] = useState(false)
 
   const navigate = useNavigate()
 
   //get all posts
   useEffect(() => {
-    const fetchData = async()=>{
-      // setPosts(JSON.parse(localStorage.getItem("getPost")))
+    const fetchData = async() =>{
+      setLoading(true)
       try{
         const res = await axiosInstance.get("/Posts/getallposts")
-        // localStorage.setItem("getPost" ,JSON.stringify(res.data))
-        setPosts(res.data)
+        setTimeout(()=>{
+          setPosts(res?.data)
+          setLoading(false)
+        },3000)
       }catch(err){
-        // setPosts(JSON.parse(localStorage.getItem("getPost")))
-
       }
         
     }
@@ -89,7 +91,12 @@ function Flashsales() {
 
 
   return (
-    <div className='w-full min-h-[40rem] bg-white shadow-2xl rounded-2xl'>
+    <div className='relative w-full min-h-[40rem] bg-white shadow-2xl rounded-2xl'>
+      {loading && 
+        <div className='absolute left-[48%] top-[18.5rem] '>
+          <LoadingSpinner/>
+        </div>
+         }
         <div className='w-full flex flex-col gap-[0.5rem]'>
             <div className='w-full flex justify-between items-center px-[2rem]  h-[8rem]  text-[white] text-[2rem] bg-[#e61601]'>
                 <div className='flex items-center gap-[2rem]'>
