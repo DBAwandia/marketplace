@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react'
+import React, { useEffect, useContext, useState, useMemo } from 'react'
 import Navbar from "../../Navbar/Navbar"
 // import { datas } from '../../../dummyData/DummyData'
 import  { HiLocationMarker} from "react-icons/hi"
@@ -31,13 +31,17 @@ function Allcategories() {
         setTimeout(()=>{
           setData(res?.data)
           setLoading(false)
-        },2000)
+        },1000)
       }catch(err){
       }
 
     }
     fetchData()
   },[])
+
+
+  //MEMOIZE
+  const datass = useMemo(()=>{ return datas },[datas])
 
    //get Users wishlist
    useEffect(()=>{
@@ -133,7 +137,7 @@ function Allcategories() {
           <Navbar/>
         </div>
         {loading && 
-        <div className='absolute left-[48%] top-[27.5rem] '>
+        <div className='absolute left-[48%] top-[47.5rem] '>
           <LoadingSpinner/>
         </div>
          }
@@ -150,7 +154,7 @@ function Allcategories() {
           </p>
         </div>
         <div className='grid grid-cols-4 gap-[2rem] py-[2rem] px-[2rem] cursor-pointer'>
-        {datas?.map((item)=>(
+        {datass?.map((item)=>(
 
           <div 
             key={item?.id}
@@ -231,9 +235,10 @@ function Allcategories() {
           <div></div>
         </div>
       </div>
+          {!loading && 
           <div className='w-full'>
             <Footer/>
-          </div>
+          </div>}
     </div>
   )
 }

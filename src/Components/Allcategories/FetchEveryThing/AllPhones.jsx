@@ -1,4 +1,4 @@
-import React, { useState,useEffect,useContext } from 'react'
+import React, { useState,useEffect,useContext, useMemo } from 'react'
 import Navbar from "../../Navbar/Navbar"
 import  { HiLocationMarker} from "react-icons/hi"
 import { BsBookmark,BsBookmarkCheckFill } from "react-icons/bs"
@@ -34,7 +34,7 @@ function AllPhones() {
         setTimeout(()=>{
           setPosts(res?.data)
           setLoading(false)
-        },2500)
+        },1500)
       }catch(err){
         // setPosts(JSON.parse(localStorage.getItem("getPost")))
 
@@ -44,10 +44,14 @@ function AllPhones() {
     fetchData()
   }, [])
 
+   //MEMOIZE
+   const datass = useMemo(()=>{ return posts },[posts])
+
+
 
   // filter posts
-  const Search = (posts) =>{
-    return posts.filter((item)=>(
+  const Search = (datass) =>{
+    return datass.filter((item)=>(
       (item?.name === name)
       ))
   }
@@ -127,7 +131,7 @@ function AllPhones() {
         <div>
         <div className='grid grid-cols-4 gap-[2rem] py-[2rem] px-[2rem] cursor-pointer'>
         {
-        Search(posts)?.map((item)=>(
+        Search(datass)?.map((item)=>(
 
           <div 
             key={item?.id}

@@ -1,8 +1,7 @@
-import React, { useContext, useState,useEffect } from 'react'
+import React, { useState,useEffect } from 'react'
 import axios from 'axios'
 import { IoMdAdd } from 'react-icons/io'
 import Navbar from '../../Components/Navbar/Navbar'
-import { LoginContext } from '../../Context/LoginContext'
 import { axiosInstance } from '../../Utils/BaseUrl'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,17 +17,12 @@ function EditAd() {
     const [ imagess , setImages ] = useState("")
     const [ locations , setLocation ] = useState("")
     const [ loading , setLoading ] = useState(false)
-    const [ imageFiles , setImageFile ] = useState(null)
+    const [ imageFiles , setImageFile ] = useState("")
     const [ data , setData ] = useState(null)
     const datas = [ data ]
 
     
     const navigate = useNavigate()
-
-    //SELLER PHONENUMBER
-    const { user } = useContext(LoginContext)
-    const phonenumber = user?.phonenumber
-    const username = user?.username
 
     const locationss = useLocation()
     const postID = locationss.state
@@ -44,7 +38,26 @@ function EditAd() {
         fetchData()
     }, [])
 
-    console.log(data)
+    //dont submitt empty input
+    const location1 = datas?.map((item) => item?.location)[0]
+    const names1 = datas?.map((item) => item?.name)[0]
+    const features1 = datas?.map((item) => item?.features)[0]
+    const description1 = datas?.map((item) => item?.description)[0]
+    const price1 = datas?.map((item) => item?.price)[0]
+    const image1 = datas?.map((item) => item?.image)[0]
+    const initialPrices1 = datas?.map((item) => item?.initialPrice)[0]
+
+    const location2 = locations?.length < 1 ? location1 : locations
+    const names2 = names?.length < 1 ? names1 : names
+    const features2 = featuress?.length < 1 ? features1 : featuress
+    const descriptions2 = descriptions?.length < 1 ? description1 : descriptions
+    const initialPrice2 = initialPrices?.length < 1 ? Number(initialPrices1) : Number(initialPrices)
+    const price2 = prices?.length < 1 ? Number(price1) : Number(prices)
+    const imageFiles2 = imageFiles?.length < 1 ? image1 : imageFiles
+
+    // console.log(prices,initialPrices ,price2 ,initialPrice2 )
+
+
 
     //Edit POST AD
     const handleClick = async (e) =>{
@@ -61,19 +74,23 @@ function EditAd() {
                     setImageFile(imageUpload)
                 }
                 //post to database
-                await axiosInstance.put(`/Posts/edit/${postID}` , {
-                            image:imageFiles,
-                            location : locations ,
-                            name: names,
-                            features: featuress,
-                            description: descriptions,
-                            price: prices,
-                            initialPrice: initialPrices,
-                        })
+               const res = await axiosInstance.put(`/Posts/edit/${postID}` , 
+               {
+                            image:imageFiles2,
+                            location : location2,
+                            name: names2,
+                            features: features2,
+                            description: descriptions2,
+                            price: price2,
+                            initialPrice: initialPrice2,
+                        }
+                        )
+                        // console.log(res)
+
                 toast.success("Successfully updated")
                 setLoading(false)
                 setTimeout(()=>{
-                    navigate("/")
+                    // navigate("/")
                 },3000)
                     
             }catch(err){
@@ -84,7 +101,7 @@ function EditAd() {
 
    
 
-
+// console.log(location2)
 
   return (
     <div className='relative w-full flex shadow-2xl flex-col gap-[2rem] min-h-screen bg-[#ebf2f7]'>

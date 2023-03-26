@@ -1,4 +1,4 @@
-import React, { useContext,useState,useEffect } from 'react'
+import React, { useContext,useState } from 'react'
 import { HiOutlineLocationMarker } from "react-icons/hi"
 import { BsBookmarkFill } from "react-icons/bs"
 import { VscAccount } from "react-icons/vsc"
@@ -12,7 +12,6 @@ function Navbar() {
   const navigate = useNavigate()
   const { dispatch } = useContext(LogoutContext)
   const [ search, setSearch ] = useState(null)
-  const [ localStorageSearch, setLocalSorageSearch ] = useState("Nokia")
   
 
   //start chat
@@ -25,10 +24,6 @@ function Navbar() {
     navigate("/post")
   }
 
-  useEffect(() => {
-    const searchs = localStorage.getItem("search") && localStorage.getItem("search") ? localStorage.getItem("search") : "Nokia"
-    setLocalSorageSearch(searchs)
-  }, [search])
 
   //SEARCH ITEMS
   const handleSubmit = async(e) =>{
@@ -54,7 +49,7 @@ function Navbar() {
             className='w-full h-full rounded-lg text-[2rem] px-[4rem] text-[gray]'
             id="submit"
             type="text" 
-            placeholder={localStorageSearch && localStorageSearch ? `${localStorageSearch}` : "Search phone..."}
+            placeholder="Search phone..."
             onChange={(e)=>setSearch(e.target.value.toLowerCase())}
         />
         <div 
@@ -66,10 +61,12 @@ function Navbar() {
         </div>
       </div>
       <div className='flex items-center gap-[3.5rem] cursor-pointer'>
-        <div className='flex items-center text-[2rem] gap-[0.5rem]'>
-            <HiOutlineLocationMarker className='text-[3rem]'/>
-            <p>Kenya</p>
-        </div>
+        <a className='decoration-[none]' href='https://www.google.com/maps/@-1.343868,36.8223627,10.16z'>
+          <div className='flex items-center text-[2rem] gap-[0.5rem]'>
+              <HiOutlineLocationMarker className='text-[3rem]'/>
+              <p>Kenya</p>
+          </div>
+        </a>
         <div 
             onClick={()=>{
               navigate("/wishlist")

@@ -4,13 +4,14 @@ import Footer from "../Footer/Footer"
 import { LoginContext } from '../../Context/LoginContext'
 import { axiosInstance } from '../../Utils/BaseUrl'
 import { Link, useNavigate } from 'react-router-dom'
-import { MdDelete } from "react-icons/md"
+import { MdDelete, MdTrendingUp } from "react-icons/md"
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner'
 
 function Wishlist() {
     const [ data, setData ] = useState(null)
-
+    const [ loading ,setLoading ] = useState(false)
     const { user } = useContext(LoginContext)
     const username = user?.username
 
@@ -20,14 +21,18 @@ function Wishlist() {
     useEffect(()=>{
         const fetchData = async() =>{
             // setData(JSON.parse(localStorage.getItem("fetchWishItems")))
+            setLoading(true)
             try{
                 const res = await axiosInstance.get(`/Posts/wishlistItems?QUERY=${username}`)
                 // localStorage.setItem("fetchWishItems" ,JSON.stringify(res.data))
-                setData(res.data)
+                setTimeout(()=>{
+                    setData(res.data)
+                    setLoading(false)
+                  },1500)
 
             }catch(err){
                 // setData(JSON.parse(localStorage.getItem("fetchWishItems")))
-
+                setLoading(false)
             }
         }
         fetchData()
@@ -53,11 +58,16 @@ function Wishlist() {
         <div className='sticky top-0 z-[9999999999999999]'>
             <Navbar/>
         </div>
+        {loading && 
+        <div className='absolute left-[48%] top-[47.5rem] '>
+          <LoadingSpinner/>
+        </div>
+         }
         <div className='min-h-0 m-auto w-[60%] mt-[5rem] mb-[5rem] pt-[3rem] flex flex-col gap-[3rem] items-center text-[2rem] bg-[#ffffff] border-2 rounded-2xl shadow-2xl'>
                 <div className='w-full text-center font-[sans-serif] py-[2rem] text-[3rem]  font-bold text-[black]  border-b-2 border-[#dae2e7]'>
-                    <h1>My wishlist items  💚      ( {" " +data?.length} )</h1>
+                    <h1>My wishlist items  💚      ( {loading ? 0 : " " +data?.length} )</h1>
                 </div>
-           {data?.length < 1 ? 
+           {!loading && data?.length < 1 ? 
             <div className='w-full h-[calc(100vh-40vh)] grid items-center justify-center cursor-default'>
                 <Link to="/">
                     <h2 className=' text-[3rem] font-extrabold text-[#6c8ea0]'>No items found ,  click here</h2>
@@ -118,7 +128,9 @@ function Wishlist() {
                 </div>
             </div>))}
         </div>
-      <Footer/>
+        {!loading &&
+        <Footer/>
+        }
     </div>
   )
 }

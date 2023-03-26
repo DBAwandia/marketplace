@@ -25,14 +25,14 @@ function RecentlyViewed() {
   useEffect(()=>{
       const fetchData = async() =>{
         setLoading(true)
-          // setData(JSON.parse(localStorage.getItem("fetchWishItems")))
+          setData(JSON.parse(localStorage.getItem("fetchWishItems")))
           try{
               const res = await axiosInstance.get(`/Posts/wishlistItems?QUERY=${username}`)
               localStorage.setItem("recentAdmired" ,JSON.stringify(res.data))
               setTimeout(()=>{
                 setData(res.data)
                 setLoading(false)
-              },3000)
+              },1500)
 
           }catch(err){
               setData(JSON.parse(localStorage.getItem("recentAdmired")))
