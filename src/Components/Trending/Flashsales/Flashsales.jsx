@@ -164,7 +164,7 @@ function Flashsales() {
                     {"$" + item?.initialPrice}
                   </p>
                   <span className='bg-[#fef3e9] rounded-lg text-[#f68b1e] text-[1.6rem] py-[0.5rem] px-[1.1rem] font-extrabold'>
-                    {item?.percentage}
+                   {"-" + Number((item?.initialPrice - item?.price)/item?.initialPrice * (100) ).toFixed(2) + "%"}
                   </span>
                 </div>
                 <div className='flex gap-[0.5rem] items-center text-[1.5rem] font-[600] text-[#6c8ea0] '>

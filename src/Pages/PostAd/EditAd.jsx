@@ -90,7 +90,7 @@ function EditAd() {
                 toast.success("Successfully updated")
                 setLoading(false)
                 setTimeout(()=>{
-                    // navigate("/")
+                    navigate("/")
                 },3000)
                     
             }catch(err){
