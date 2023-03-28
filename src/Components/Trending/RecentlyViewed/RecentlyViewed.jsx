@@ -36,6 +36,7 @@ function RecentlyViewed() {
 
           }catch(err){
               setData(JSON.parse(localStorage.getItem("recentAdmired")))
+              setLoading(false)
 
           }
       }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { Link } from 'react-router-dom'
@@ -10,6 +10,8 @@ import { axiosInstance } from '../../../Utils/BaseUrl';
 function Resetpassword() {
     const [ phonenumber , setPhonenumber ] = useState("")
     const [ password , setPassword ] = useState("")
+    const [ startTime , setStartTime ] = useState(30)
+    const [ startTimer , setStartTimer ] = useState(false)
     const [ showPassword , setShowPassword ] = useState(false)
     const [ showOtp , setShowOtp ] = useState(false)
     const [ loading , setLoading ] = useState(false)
@@ -17,77 +19,86 @@ function Resetpassword() {
     const [ otp , setOtp ] = useState("")
 
 
-    // console.log(confirmationCode)
-
     const substringNumber = phonenumber.substring(1)
     const phoneNumber = `+254${substringNumber}`
-    
 
+
+    //CONTROLL START TIMER
+    useEffect(()=>{
+        if(startTime < 2){
+            setStartTime(30)
+            setStartTimer(false)
+        }
+    },[startTime ])
+
+    //COUNTER
+    let timer;
+    useEffect(()=>{
+        if(startTimer){
+            timer = setInterval(()=>{
+                    setStartTime((startTime)=>  startTime - 1)
+                },1000)
+        }
+        return ()=> {clearInterval(timer)}
+
+    },[startTimer , startTime ])
+    
     // OTP REQUEST
     const sendOtp = async()=>{
 
+        setStartTimer(true)
         //ENABLE RESEND VERIFIFIER
-        if(window.recaptchaVerifier){
-            window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-                'size': 'normal',
+        if(!window.recaptchaVerifier){
+            window.recaptchaVerifier = new RecaptchaVerifier('sign-in-button', {
+                'size': 'invisible',
                 'callback': (response) => {
                   // reCAPTCHA solved, allow signInWithPhoneNumber.
-                  // ...
-                //   console.log(response)
                 },
                 'expired-callback': () => {
                   // Response expired. Ask user to solve reCAPTCHA again.
-                  // ...
                 }
               }, auth);
             }
-
-            console.log(window.recaptchaVerifier)
-            setShowOtp(true)
+        setShowOtp(true)
 
         const appVerifier = window.recaptchaVerifier;
-
 
         signInWithPhoneNumber(auth, phoneNumber, appVerifier)
             .then((confirmationResult) => {
             // SMS sent. Prompt user to type the code from the message, then sign the
             // user in with confirmationResult.confirm(code).
             window.confirmationResult = confirmationResult;
-            setConfirmationCode(confirmationResult)
+            setConfirmationCode( window.confirmationResult)
             toast.success("Otp sent succcessfully")
             
             }).catch((error) => {
             // Error; SMS not sent
-            console.log(error)
-            alert("Retry please")
+            alert("Too frequent")
+            setStartTimer(false)
+
             // ...
             });
-       
     }
 
     //RESET BUTTON
     const resetPassword = async()=>{
          setLoading(true)
-
         try{
             confirmationCode.confirm(otp).then(async (result) => {
-
-                // User signed in successfully.
-                console.log(result)
-                
-
+              console.log(result)
+              await axiosInstance.put("/Users/reset" , { phonenumber: phonenumber , password: password })
+              setLoading(false)
+              toast.success("Succcessfully modified")
+            //   setTimeout(()=>{
+            //     <Navigate to="/login" />
+            // },2000)
+            
               }).catch((error) => {
-
                 // User couldn't sign in (bad verification code?)
                 toast.error("Wrong confirmation code")
                 setLoading(false)
               });
-              await axiosInstance.put("/Users/reset" , { phonenumber: phonenumber , password: password })
-              setLoading(false)
-              toast.success("Succcessfully modified")
-              setTimeout(()=>{
-                  navigate("/login")
-              },2000)
+             
         }catch(err){
             toast.error(err.response.data)
         }
@@ -154,7 +165,7 @@ function Resetpassword() {
             </div>
             
         </div>
-            <div className='flex flex-col gap-[0.8rem] w-full'>
+            <div className='relative flex flex-col gap-[0.8rem] w-full'>
                 {showOtp &&
                 <label className='font-bold'>OTP</label>
                 }
@@ -168,15 +179,24 @@ function Resetpassword() {
                 }
                 {phonenumber.length > 9 &&
                     <button 
+                        disabled={startTimer}
                         onClick={sendOtp}
                         className='w-full h-[6rem] bg-[#a359db] rounded-lg text-[white]  hover:bg-[#69388f]'
                     >
-                        Request otp
+                        {startTimer ? "Resend in" : "Request otp"}
                     </button>
                 }
+                   {startTimer && 
+                    <div className='grid shadow-xl items-center justify-center rounded-full bg-[white] py-[0.4rem] px-[0.5rem] absolute top-[12rem] right-[2rem] font-bold text-[1.5rem]'>
+                        <p>
+                        {startTime < 10 ? "0"+startTime : startTime}
+                        </p>
+                    </div> 
+                    }
             </div>
         <div className='w-full h-[6rem] mt-[2rem] '>
             <button 
+                disabled={otp?.length < 5}
                 onClick={resetPassword}
                 className='w-full h-[100%] text-white bg-[#8529cd] rounded-lg hover:bg-[#69388f]'
             >
@@ -193,7 +213,7 @@ function Resetpassword() {
         </div>
     </div>
     </div>
-    <div id='recaptcha-container'></div>
+    <div id='sign-in-button'></div>
 </div>
   )
 }

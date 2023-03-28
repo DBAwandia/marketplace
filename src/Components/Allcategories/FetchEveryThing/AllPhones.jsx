@@ -163,7 +163,9 @@ function AllPhones() {
                       onClick={()=>addWishList(item?._id)}
                       className={wishlist?.find((items) => item._id === items ) ?"hidden text-[3rem] text-[#8529cd]" : "block text-[3rem] text-[#8529cd]"}
                    />
-                  </div>}
+                  </div>
+                  }
+
                 </div>
 
             <LazyLoadImage
