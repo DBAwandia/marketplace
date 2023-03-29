@@ -177,11 +177,11 @@ function Product() {
                     <span className="text-[1.8rem] text-[#878a8c]">(scrolldown for more details)</span>
                   </p>
                   <span className='text-[#282828] font-extrabold text-[3rem]'>
-                    {"$" + Number(item?.price).toFixed(2)}
+                    {"KSh" + " " + Number(item?.price).toLocaleString("en-us")}
                   </span>
                 <div className='flex gap-[4rem] items-center text-[2rem] font-semibold'>
-                  <p className='line-through decoration-4 decoration-[#8529cd] text-[#6c8ea0]'>
-                    {"$" + item?.initialPrice}
+                  <p className='line-through decoration-[0.18rem] text-[#6c8ea0]'>
+                    {"KSh" + " " + Number(item?.initialPrice).toLocaleString("en-us")}
                   </p>
                   <span className='bg-[#fef3e9] rounded-lg text-[#f68b1e] text-[1.6rem] py-[0.5rem] px-[1.1rem] font-extrabold'>
                     {"-" + Number((item?.initialPrice - item?.price)/item?.initialPrice * (100) ).toFixed(2) + "%"}

@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { BrowserRouter as Router,Routes,Route } from 'react-router-dom'
+import React, { useContext } from 'react'
+import {Navigate, BrowserRouter as Router,Routes,Route } from 'react-router-dom'
 import 'animate.css';
 import { LogoutContext } from './Context/LogoutContext'
 import Home from './Components/Home/Home'
@@ -19,10 +19,22 @@ import MyPostAds from './Pages/MyPostAds/MyPostAds'
 import EditAd from './Pages/PostAd/EditAd';
 import Messages from './Messages/Messages';
 import LoadingSpinner from './LoadingSpinner/LoadingSpinner';
+import { LoginContext } from './Context/LoginContext';
 
 function App() {
 
   const { openLogout } = useContext(LogoutContext)
+  const { user } = useContext(LoginContext)
+
+  const ProtectedRoute = ({children})=>{
+    if(!user){
+      return  <Navigate to="/login" />
+
+    }else{
+      return children
+    }
+  }
+
   
   return (
     <div className='relative'>
@@ -38,15 +50,15 @@ function App() {
           <Route path="/all" element={<AllPhones/>} />
           <Route path="/search" element={<SearchFilter/>} />
           <Route path="/product/:id" element={<Product/>} />
-          <Route path="/post" element={<PostAd/>} />
+          <Route path="/post" element={<ProtectedRoute><PostAd/></ProtectedRoute>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/register" element={<Register/>} />
           <Route path="/resetpassword" element={<Resetpassword/>} />
-          <Route path="/wishlist" element={<Wishlist/>} />
-          <Route path="/mypostad" element={<MyPostAds/>} />
-          <Route path="/editad" element={<EditAd/>} />
+          <Route path="/wishlist" element={<ProtectedRoute><Wishlist/></ProtectedRoute>} />
+          <Route path="/mypostad" element={<ProtectedRoute><MyPostAds/></ProtectedRoute>} />
+          <Route path="/editad" element={<ProtectedRoute><EditAd/></ProtectedRoute>} />
           <Route path="/loading" element={<LoadingSpinner/>} />
-          <Route path="/messages" element={<Messages/>} />
+          <Route path="/messages" element={<ProtectedRoute><Messages/></ProtectedRoute>} />
 
 
 

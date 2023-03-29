@@ -46,6 +46,13 @@ function Resetpassword() {
     // OTP REQUEST
     const sendOtp = async()=>{
 
+        //check first if user exist in database
+        let user = await axiosInstance.get(`/Users/getUser?QUERY=${phonenumber}`)
+
+        if(!user?.data){
+            toast.error("User not dound")
+        }else{
+
         setStartTimer(true)
         //ENABLE RESEND VERIFIFIER
         if(!window.recaptchaVerifier){
@@ -75,9 +82,11 @@ function Resetpassword() {
             // Error; SMS not sent
             alert("Too frequent")
             setStartTimer(false)
-
+            setShowOtp(false)
             // ...
             });
+        }
+
     }
 
     //RESET BUTTON
@@ -187,7 +196,7 @@ function Resetpassword() {
                     </button>
                 }
                    {startTimer && 
-                    <div className='grid shadow-xl items-center justify-center rounded-full bg-[white] py-[0.4rem] px-[0.5rem] absolute top-[12rem] right-[2rem] font-bold text-[1.5rem]'>
+                    <div className='grid shadow-xl items-center justify-center rounded-full text-[white] py-[0.4rem] px-[0.5rem] absolute top-[12rem] right-[2rem] font-bold text-[1.7rem]'>
                         <p>
                         {startTime < 10 ? "0"+startTime : startTime}
                         </p>

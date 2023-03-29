@@ -34,7 +34,7 @@ function Login() {
                 setShowImage(true)
                 setTimeout(()=>{
                     navigate("/")
-                },5500)
+                },3500)
             }catch(err){
                 setShowImage(false)
                 dispatch({type: "LOGIN_FAIL"})

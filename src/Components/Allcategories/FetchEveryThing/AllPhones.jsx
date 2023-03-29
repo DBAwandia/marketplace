@@ -181,14 +181,14 @@ function AllPhones() {
                 {item?.features}
               </p>
               <span className='text-[#282828] font-extrabold text-[3rem]'>
-                {"$" + item?.price}
+                {"KSh" + " " + Number(item?.price).toLocaleString("en-us")}
               </span>
               <p>
                 {item?.description?.slice(0,40)}
               </p>
             <div className='flex gap-[4rem] items-center '>
-              <p className='line-through decoration-4 decoration-[#8142bb] text-[#6c8ea0]'>
-                {"$" + item?.initialPrice}
+              <p className='line-through decoration-[0.18rem] text-[#6c8ea0]'>
+                {"KSh" + " " + Number(item?.initialPrice).toLocaleString("en-us")}
               </p>
               <span className='bg-[#fef3e9] rounded-lg text-[#f68b1e] text-[1.6rem] py-[0.5rem] px-[1.1rem] font-extrabold'>
                 {"-" + Number((item?.initialPrice - item?.price)/item?.initialPrice * (100) ).toFixed(2) + "%"}

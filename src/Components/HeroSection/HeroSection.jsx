@@ -20,22 +20,22 @@ const dummyData = [
    ,
     {
         id:2,
-        image: "https://pricepony.com/wp-content/uploads/2022/08/Best-Huawei-phones-August-2022.jpg",
+        image: "https://avatars.mds.yandex.net/i?id=aa7cf90781c36f1ed36bf27b168ea54089cd34a9-4745534-images-thumbs&n=13",
         // description:"Shop from anywhere"
     },
     {
         id:3,
-        image: "https://images.pexels.com/photos/9995702/pexels-photo-9995702.jpeg?auto=compress&cs=tinysrgb&h=627&fit=crop&w=1200",
+        image: "https://pricepony.com/wp-content/uploads/2022/08/Best-Huawei-phones-August-2022.jpg",
         // description:"Interact with farmers through direct contact"
     },
     {
         id:4,
-        image: "https://www.harapanrakyat.com/wp-content/uploads/2022/06/Oppo-Reno7.jpg",
+        image: "https://avatars.mds.yandex.net/i?id=48d7488524f0f9b5909b7129ee3301598d90dda9-8339189-images-thumbs&n=13",
         // description:"Shop securely"
     } ,
     {
         id:5,
-        image: "https://www.pngitem.com/pimgs/m/201-2018101_transparent-hombre-png-man-with-laptop-png-hd.png",
+        image: "https://avatars.mds.yandex.net/i?id=7a4524a1f551eb4f30612ae58bb1cbda2ae18a34-8567399-images-thumbs&n=13",
         description:"254742845204"
     }
 ]
@@ -64,7 +64,7 @@ function HeroSection() {
                     >
                     <LazyLoadImage 
                         effect='blur'
-                        className='w-[100%] h-[72vh] object-fill  bg-cover'
+                        className='w-[100%] h-[72vh] p-[1rem] object-fill  bg-fill'
                         src={item?.image} 
                         alt="farmland image" 
                     />
@@ -72,7 +72,6 @@ function HeroSection() {
                         <p 
                             className='text-[2rem] font-extrabold opacity-[0.3]'
                         >
-                            {item?.description}
                         </p>
                     </div>
                     </div>

@@ -84,7 +84,7 @@ function PostAd() {
 
   return (
     <div className='relative w-full flex shadow-2xl flex-col gap-[2rem] min-h-screen bg-[#ebf2f7]'>
-            <div className='sticky top-0 z-[99999999999999999999999]'>
+            <div className='sticky top-0 z-[99999999]'>
                 <Navbar/>
             </div>
 

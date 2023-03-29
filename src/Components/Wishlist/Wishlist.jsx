@@ -55,7 +55,7 @@ function Wishlist() {
 
   return (
     <div className='relative w-full min-h-screen bg-[#ebf2f7]'>
-        <div className='sticky top-0 z-[9999999999999999]'>
+        <div className='sticky top-0 z-[999999999]'>
             <Navbar/>
         </div>
         {loading && 
@@ -99,8 +99,8 @@ function Wishlist() {
                     <p className='font-[599]'>                
                         {item?.description?.slice(0,40)}
                     </p>
-                    <p className='font-extrabold text-[#00b53f] text-[2.3rem]'>{"KSH" + " " + item?.price}</p>
-                    <p className='text-[#6c8ea0] line-through'>{"KSH" + " " + item?.initialPrice}</p>
+                    <p className='font-extrabold text-[#00b53f] text-[2.3rem]'>{"KSh" + " " + Number(item?.price).toLocaleString("en-us")}</p>
+                    <p className='text-[#6c8ea0] line-through'>{"KSh" + " " + Number(item?.initialPrice).toLocaleString("en-us")}</p>
                     <span className='text-[#6c8ea0]'>{item?.location}</span>
                 </div>
 

@@ -54,11 +54,12 @@ function Logout() {
             <p>Best practises</p>
         </div>
 
-        <div className='flex font-[599] cursor-pointer items-center gap-[1.5rem] hover:text-[#8529cd]'>
-            <MdSupportAgent className='text-[3rem]'/>
-            <p>Customer support</p>
-        </div>
-
+       <a href='https://wa.me/254742845204?text=Hi'>
+          <div className='flex font-[599] cursor-pointer items-center gap-[1.5rem] hover:text-[#8529cd]'>
+              <MdSupportAgent className='text-[3rem]'/>
+              <p>Customer support</p>
+          </div>
+        </a>
         <div 
             onClick={logout}
             className='flex font-[599] cursor-pointer items-center text-red-400 gap-[1.5rem] hover:text-[red]'>
