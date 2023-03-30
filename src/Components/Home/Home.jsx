@@ -4,6 +4,7 @@ import Trending from '../Trending/Trending'
 import Navbar from "../Navbar/Navbar"
 import Choosecategory from '../Choosecategory/Choosecategory'
 import Footer from '../Footer/Footer'
+import CompanyBrief from '../CompanyBrief/CompanyBrief'
 
 function Home() {
   return (
@@ -16,6 +17,9 @@ function Home() {
         </div>
         <div className='sticky top-0 z-[9999999999999999]'>
             <Choosecategory/>
+        </div>
+        <div className='py-[3rem]'>
+            <CompanyBrief/>
         </div>
         <div>
             <Trending/>

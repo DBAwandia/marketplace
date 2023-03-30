@@ -36,15 +36,22 @@ function Navbar() {
   return (
     <div className='flex items-center justify-between w-full h-[12rem] bg-[#8529cd] px-[3rem] text-[#fff] shadow-xl'>
 
-      <div className='flex items-center text-[2.8rem] text-decorate font-bold tracking-[3px] cursor-pointer'
+      <div className='flex items-center text-[2.8rem] font-bold cursor-pointer'
         onClick={()=>{
           navigate("/")
         }}
       >
-        <h1>PHONE</h1>
-        <h2>PLACE</h2>
+        <img
+          className='w-[100px] mr-[-1rem] h-[100px] object-cover'
+          src="/images/logo.png"
+          alt="phoneplace logo"
+        />
+        <div className='flex tracking-[8px]  items-center'>
+          <h1>HONE</h1>
+          <h2>PLACE</h2>
+        </div>
       </div>
-      <div className='relative w-[40%] bg-red-900 h-[5.3rem]'>
+      <div className='relative w-[35%]  h-[5.3rem]'>
         <input 
             className='w-full h-full rounded-lg text-[2rem] px-[4rem] text-[gray]'
             id="submit"

@@ -10,8 +10,8 @@ function Choosecategory() {
     <div className='relative w-full h-[8rem] bg-[#8529cd] text-[#fff] text-[2rem]'>
       <div className='px-[2rem] py-[2rem]'>
         <ul className='flex items-center justify-between cursor-pointer '>
-            <li className='hover:text-[#ff9900]  hover:font-extrabold' onClick={()=>handleClick("Iphone")}>
-                Iphone
+            <li className='hover:text-[#ff9900]  hover:font-extrabold' onClick={()=>handleClick("IPhone")}>
+                IPhone
             </li>
             <li className='hover:text-[#ff9900] hover:font-extrabold' onClick={()=>handleClick("Huawei")}>
                 Huawei
@@ -22,14 +22,20 @@ function Choosecategory() {
             <li className='hover:text-[#ff9900] hover:font-extrabold' onClick={()=>handleClick("Infinix")}>
                 Infinix
             </li>
-            <li className='hover:text-[#ff9900] hover:font-extrabold' onClick={()=>handleClick("Techno")}>
-                Techno
+            <li className='hover:text-[#ff9900] hover:font-extrabold' onClick={()=>handleClick("Tecno")}>
+                Tecno
+            </li>
+            <li className='hover:text-[#ff9900] hover:font-extrabold' onClick={()=>handleClick("Vivo")}>
+                Vivo
+            </li>
+            <li className='hover:text-[#ff9900] hover:font-extrabold' onClick={()=>handleClick("Oppo")}>
+                Oppo
             </li>
             <li className='hover:text-[#ff9900] hover:font-extrabold' onClick={()=>handleClick("Realmi")}>
                 Realmi
             </li>
-            <li className='hover:text-[#ff9900] hover:font-extrabold' onClick={()=>handleClick("Oppo")}>
-                Oppo
+            <li className='hover:text-[#ff9900] hover:font-extrabold' onClick={()=>handleClick("HTC")}>
+                HTC
             </li>
             <li className='hover:text-[#ff9900] hover:font-extrabold' onClick={()=>handleClick("Xiaomi")}>
                 Xiaomi

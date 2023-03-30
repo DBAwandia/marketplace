@@ -163,9 +163,10 @@ function Flashsales() {
                   <p className='line-through decoration-[0.18rem] text-[#6c8ea0]'>
                     {"KSh" + " " + Number(item?.initialPrice).toLocaleString("en-us")}
                   </p>
+                  {!item?.soldOut && 
                   <span className='bg-[#fef3e9] rounded-lg text-[#f68b1e] text-[1.6rem] py-[0.5rem] px-[1.1rem] font-extrabold'>
                    {"-" + Number((item?.initialPrice - item?.price)/item?.initialPrice * (100) ).toFixed(2) + "%"}
-                  </span>
+                  </span>}
                 </div>
                 <div className='flex gap-[0.5rem] items-center text-[1.5rem] font-[600] text-[#6c8ea0] '>
                   <HiLocationMarker className=""/>
