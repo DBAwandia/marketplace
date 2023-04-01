@@ -140,7 +140,8 @@ function Flashsales() {
                                     ()=>handleClick(item?._id) 
                               }
               >
-                {item?.soldOut && <div className='border-2 px-[1.5rem] absolute text-[2.3rem] rounded-lg font-bold bottom-[1.5rem] font-[ "Noto Sans"] right-[2.5rem] text-[#ef4444]'>
+                {item?.soldOut && 
+                <div className='border-2 bg-[black] px-[1.5rem] py-[0.6rem] absolute text-[2rem] rounded-lg bottom-[1.5rem] font-[ "Noto Sans"] right-[2.5rem] text-[#fff]'>
                   <h2>Sold Out</h2>
                 </div>}
 

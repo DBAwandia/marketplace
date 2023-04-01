@@ -1,4 +1,4 @@
-import React, { useContext, useEffect , useState } from 'react'
+import React, { useContext, useEffect , useRef, useState } from 'react'
 import Navbar from "../Components/Navbar/Navbar"
 import Conversation from "../Messages/Conversation/Conversation"
 import Message from "../Messages/Message/Message"
@@ -7,23 +7,51 @@ import { LoginContext } from '../Context/LoginContext'
 import { axiosInstance } from "../Utils/BaseUrl"
 import { useLocation } from 'react-router-dom'
 import { ChatContext } from '../Context/ChatContext'
+import { io } from "socket.io-client";
 
 function Messages() {
     const [ conversation , setConversation ] = useState(null)
     const [ messages , setMessages ] = useState(null)
     const [ messagesFromProduct , setMessagesFromProduct ] = useState(null)
     const [ newMessage , setNewMessage ] = useState("")
+    const [ arrivalMessage , setArrivalMessage ] = useState(null)
     const [ loading , setLoading ] = useState(false)
     const [ enableButton , setEnableButton ] = useState(false)
     const location = useLocation()
     const conversationIdFromProduct = location?.state?.consversationID
+    const scrollRef = useRef();
+    const [ sockets , setSockets ] = useState(null)
+    const [ receiverNo , setReceiverNo ] = useState(null)
+
+
+    const { user } = useContext(LoginContext)
+    const phonenumber = user?.phonenumber
+
+    //CONNECT TO SOCKET SERVER
+    useEffect(() => {
+        setSockets(io("ws://localhost:8900"))
+    
+    }, [])
+
+    //send and get userID and socket id from socketserver
+    useEffect(() => {
+        //addPhonenumber to socketserver
+        sockets?.emit("addUser" , phonenumber)
+
+        //get socket id and phonenumber from server
+        sockets?.on("getUsers" , users =>{
+            console.log(users)
+        })
+        
+    }, [])
+
 
     //GET CHAT MEMBER AFTER PRODUCT CLICK ON PRODUCT DETAILS PAGE
     const { chatId ,dispatch } = useContext(ChatContext)
 
     //disable button on empty input
     useEffect(()=>{
-        if(newMessage.length < 1){
+        if(newMessage?.length < 1){
             setEnableButton(true)
         }else{
             setEnableButton(false)
@@ -43,9 +71,6 @@ function Messages() {
     }
     //get conversationID from localStorage
     const converID = localStorage.getItem("conversationID")
-
-    const { user } = useContext(LoginContext)
-    const phonenumber = user?.phonenumber
 
   
      //fetch messages
@@ -90,24 +115,77 @@ function Messages() {
 
     },[phonenumber])
 
+
+    //sellers contact or friends contact
+    useEffect(() => {
+        const fetchFriendID = async ()=>{
+        try{
+            const friendNumber = await axiosInstance.get(`/Conversations/conversations/${currentChat?._id}`)
+            const friendNumberInfo = friendNumber?.data?.members?.find(member => member !== phonenumber)
+            setReceiverNo(friendNumberInfo)
+        }catch(err){}
+
+      }
+      fetchFriendID()
+
+    }, [currentChat?._id])
+    console.log(receiverNo ,)
+
+    //RETRIEVE MESSAGE FROM SOCKET
+    useEffect(() => {
+        //data -> u can call any name
+        sockets?.on("getMessage" , data =>{
+            setArrivalMessage({
+                senderNo: data?.senderNo,
+                text: data?.text,
+                createdAt: Date.now()
+            })
+        })
+    }, [])
+    console.log(arrivalMessage)
+
+    useEffect(() => {
+        arrivalMessage &&  
+        currentChat?.members?.includes(arrivalMessage?.senderNo) &&
+        setMessages(prev => [...prev , arrivalMessage])
+    
+    }, [arrivalMessage , currentChat])
+
     //send message
     const sendMessage = async (e) =>{
         setLoading(true)
         try{
+            //SOCKETS SEND MESSAGE
+          sockets?.emit("sendMessage" ,{
+                senderNo: phonenumber?.toString(),
+                receiverNo: receiverNo?.toString(),
+                text: newMessage
+
+            })
+
           await axiosInstance.post("/Messages/message" , {
                 text: newMessage,
                 senderPhone: phonenumber,
                 converID: currentChat?._id
             })
             setTimeout(()=>{
+
                 setLoading(false)
+                setNewMessage("")
             }, 2500)
+            
+            
 
         }catch(err)
         {
             setLoading(false)
         }
     }
+
+    //scroll to bottom
+    useEffect(() => {
+        scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, [messages]);
 
    
 
@@ -157,11 +235,12 @@ function Messages() {
                     <h1 className='text-center mt-[4rem] text-[#5f6368] font-bold text-[2.5rem]'>Do not pay in advance including transport fee</h1>
 
                         {messages?.map((message)=>
-                            
-                            <Message 
-                                message={message}
-                                own={phonenumber}
-                            />
+                            <div  ref={scrollRef}>
+                                <Message 
+                                    message={message}
+                                    own={phonenumber}
+                                />
+                            </div>
                         )}
 
                 </div>
@@ -170,6 +249,7 @@ function Messages() {
                         onChange={(e)=>setNewMessage(e.target.value)}
                         className='text-[2rem] w-full h-[10vh] pl-[5rem] bg-[#f0f2f5]'
                         type="text"
+                        value={newMessage}
                         placeholder='Send message'
                     />
                     <div className='absolute cursor-pointer right-[5rem] text-[#54656f] top-[2rem] flex gap-[4rem] items-center'>
