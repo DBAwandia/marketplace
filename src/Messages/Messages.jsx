@@ -129,7 +129,6 @@ function Messages() {
       fetchFriendID()
 
     }, [currentChat?._id])
-    console.log(receiverNo ,)
 
     //RETRIEVE MESSAGE FROM SOCKET
     useEffect(() => {
@@ -142,23 +141,26 @@ function Messages() {
             })
         })
     }, [])
-    console.log(arrivalMessage)
 
     useEffect(() => {
-        arrivalMessage &&  
+      arrivalMessage &&  
         currentChat?.members?.includes(arrivalMessage?.senderNo) &&
-        setMessages(prev => [...prev , arrivalMessage])
+        setMessages(prev => [...prev ,arrivalMessage])
+        
     
     }, [arrivalMessage , currentChat])
+        console.log(arrivalMessage , messages)
 
+
+    let receiverNos  = Number(receiverNo)
     //send message
     const sendMessage = async (e) =>{
         setLoading(true)
         try{
             //SOCKETS SEND MESSAGE
           sockets?.emit("sendMessage" ,{
-                senderNo: phonenumber?.toString(),
-                receiverNo: receiverNo?.toString(),
+                senderNo: phonenumber,
+                receiverNo: receiverNos,
                 text: newMessage
 
             })
