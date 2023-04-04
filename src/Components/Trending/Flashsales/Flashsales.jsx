@@ -131,7 +131,7 @@ function Flashsales() {
 
               <div 
                 key={item?._id}
-                className='flex relative flex-col gap-[0.7rem] text-[2rem] border-2 hover:shadow-2xl hover:border-0 px-[2.5rem] py-[1.5rem]'
+                className='flex relative flex-col gap-[1.4rem] text-[2rem] border-2 hover:shadow-2xl hover:border-0 px-[2.5rem] py-[1.5rem]'
                 aria-label='Save'
                 onClick={item?.soldOut ?()=>{
                                      navigate("/flashsale")
@@ -147,7 +147,7 @@ function Flashsales() {
 
                 <LazyLoadImage
                   effect='blur'
-                  className='w-[30rem] h-[25rem] object-cover'
+                  className='w-[30rem] h-[32rem] object-cover'
                   src={item?.image}
                   alt="phonesfarm phone"
                 />
@@ -155,7 +155,7 @@ function Flashsales() {
                     {item?.name}
                   </p>
                   <p className='text-[#6c8ea0] text-[1.7rem] font-[500]'>
-                    {item?.description?.slice(0,40)}
+                    {item?.description?.slice(0,35)}
                   </p>
                   <span className='text-[#282828] font-extrabold text-[3rem]'>
                     {"KSh" + " " + Number(item?.price).toLocaleString("en-us")}
@@ -170,7 +170,7 @@ function Flashsales() {
                   </span>}
                 </div>
                 <div className='flex gap-[0.5rem] items-center text-[1.5rem] font-[600] text-[#6c8ea0] '>
-                  <HiLocationMarker className=""/>
+                  <HiLocationMarker className="text-[2rem]"/>
                   <p>{item?.location}</p>
                 </div>
                  

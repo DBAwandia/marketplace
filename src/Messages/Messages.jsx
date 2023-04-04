@@ -134,8 +134,9 @@ function Messages() {
     useEffect(() => {
         //data -> u can call any name
         sockets?.on("getMessage" , data =>{
+            // console.log(data)
             setArrivalMessage({
-                senderNo: data?.senderNo,
+                senderPhone: data?.senderPhone,
                 text: data?.text,
                 createdAt: Date.now()
             })
@@ -144,12 +145,14 @@ function Messages() {
 
     useEffect(() => {
       arrivalMessage &&  
-        currentChat?.members?.includes(arrivalMessage?.senderNo) &&
-        setMessages(prev => [...prev ,arrivalMessage])
-        
+        currentChat?.members?.includes(arrivalMessage?.senderPhone?.toString()) &&
+        setMessages((prev) =>
+        {
+            return [...prev ,arrivalMessage]
+        })
     
     }, [arrivalMessage , currentChat])
-        console.log(arrivalMessage , messages)
+        console.log(arrivalMessage?.senderPhone )
 
 
     let receiverNos  = Number(receiverNo)
@@ -159,7 +162,7 @@ function Messages() {
         try{
             //SOCKETS SEND MESSAGE
           sockets?.emit("sendMessage" ,{
-                senderNo: phonenumber,
+                senderPhone: phonenumber,
                 receiverNo: receiverNos,
                 text: newMessage
 
@@ -174,7 +177,7 @@ function Messages() {
 
                 setLoading(false)
                 setNewMessage("")
-            }, 2500)
+            }, 500)
             
             
 

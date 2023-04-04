@@ -13,7 +13,6 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import LoadingSpinner from '../../../LoadingSpinner/LoadingSpinner'
 
 function AllPhones() {
-  // const [ isAdded, setIsAdded ] = useState(false)
   const [ posts, setPosts ] = useState([])
   const [ wishlist, setWishlist ] = useState(null)
   const location = useLocation()
@@ -21,7 +20,6 @@ function AllPhones() {
   const { user } = useContext(LoginContext)
   const navigate = useNavigate()
   const [ loading ,setLoading ] = useState(false)
-
 
   //get all posts
   useEffect(() => {
@@ -47,12 +45,12 @@ function AllPhones() {
    //MEMOIZE
    const datass = useMemo(()=>{ return posts },[posts])
 
-
-
   // filter posts
+  const KEYS = ["name"]
+
   const Search = (datass) =>{
-    return datass.filter((item)=>(
-      (item?.name === name)
+    return datass?.filter((item)=>(
+        KEYS.some((key) => item[key]?.toLowerCase()?.includes(name?.toLowerCase()))
       ))
   }
 
@@ -135,7 +133,7 @@ function AllPhones() {
 
           <div 
             key={item?.id}
-            className='relative flex flex-col gap-[0.7rem] text-[2rem] border-2 px-[2.5rem] py-[1.5rem]'
+            className='relative flex flex-col gap-[1.4rem] text-[2rem] border-2 px-[2.5rem] py-[1.5rem]'
             aria-label='Save'
           >
               <div className='absolute z-[99999] hover:shadow-inner grid items-center justify-center top-[2rem] right-[2rem] bg-white w-[6rem] h-[6rem] rounded-full shadow-2xl'>
@@ -170,7 +168,7 @@ function AllPhones() {
 
             <LazyLoadImage
               effect='blur'
-              className='w-[30rem] h-[25rem] object-cover'
+              className='w-[30rem] h-[32rem] object-cover'
               src={item?.image}
               alt="phonesfarm phone"
             />
@@ -178,14 +176,14 @@ function AllPhones() {
                 {item?.name}
               </p>
               <p className='text-[#6c8ea0] w-[30rem] text-[1.5rem] font-[500]'>
-                {item?.features}
+                {item?.features?.slice(0,32) + " " + ". . ."}
               </p>
               <span className='text-[#282828] font-extrabold text-[3rem]'>
                 {"KSh" + " " + Number(item?.price).toLocaleString("en-us")}
               </span>
-              <p>
-                {item?.description?.slice(0,40)}
-              </p>
+              {/* <p>
+                {item?.description?.slice(0,30)}
+              </p> */}
             <div className='flex gap-[4rem] items-center '>
               <p className='line-through decoration-[0.18rem] text-[#6c8ea0]'>
                 {"KSh" + " " + Number(item?.initialPrice).toLocaleString("en-us")}
@@ -195,7 +193,7 @@ function AllPhones() {
               </span>
             </div>
             <div className='flex gap-[0.5rem] items-center text-[1.5rem] font-[600] text-[#6c8ea0] '>
-              <HiLocationMarker className=""/>
+              <HiLocationMarker className="text-[2rem]"/>
               <p>{item?.location}</p>
             </div>
               <button 

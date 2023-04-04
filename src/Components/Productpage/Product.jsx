@@ -188,7 +188,7 @@ function Product() {
                   </span>
                 </div>
                 <div className='flex gap-[0.5rem] items-center text-[1.5rem] font-[600] text-[#6c8ea0] '>
-                  <HiLocationMarker className=""/>
+                  <HiLocationMarker className="text-[2rem]"/>
                   <p>{item?.location}</p>
                 </div>
 

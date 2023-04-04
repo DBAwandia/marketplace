@@ -5,6 +5,7 @@ function Message({own , message}) {
 
   //Check if message is mine
   const myOwnText = own === message?.senderPhone
+  console.log(own , message?.senderPhone, message.senderNo)
 
   return (
     <div className='w-full flex flex-col gap-[2rem] p-[3rem]'>

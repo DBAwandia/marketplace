@@ -56,7 +56,7 @@ function Navbar() {
             className='w-full h-full rounded-lg text-[2rem] px-[4rem] text-[gray]'
             id="submit"
             type="text" 
-            placeholder="Search phone..."
+            placeholder="Search phone ,region . . ."
             onChange={(e)=>setSearch(e.target.value.toLowerCase())}
         />
         <div 

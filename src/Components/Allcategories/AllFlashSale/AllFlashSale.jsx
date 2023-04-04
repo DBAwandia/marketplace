@@ -158,7 +158,7 @@ function Allcategories() {
 
           <div 
             key={item?.id}
-            className='relative flex flex-col gap-[0.7rem] text-[2rem] border-2 px-[2.5rem] py-[1.5rem]'
+            className='relative flex flex-col gap-[1.4rem] text-[2rem] border-2 px-[2.5rem] py-[1.5rem]'
             aria-label='Save'
 
           >
@@ -194,7 +194,7 @@ function Allcategories() {
 
             <LazyLoadImage
               effect='blur'
-              className='w-[30rem] z-[4] h-[25rem] object-cover'
+              className='w-[30rem] z-[4] h-[32rem] object-cover'
               src={item?.image}
               alt="phonesfarm phone"
             />
@@ -202,7 +202,7 @@ function Allcategories() {
                 {item?.name}
               </p>
               <p className='text-[#6c8ea0] w-[30rem] text-[1.5rem] font-[500]'>
-                {item?.description?.slice(0,40)}
+                {item?.description?.slice(0,38)}
               </p>
               <span className='text-[#282828] font-extrabold text-[3rem]'>
                 {"KSh" + " " + Number(item?.price).toLocaleString("en-us")}
@@ -216,7 +216,7 @@ function Allcategories() {
               </span>
             </div>
             <div className='flex gap-[0.5rem] items-center text-[1.5rem] font-[600] text-[#6c8ea0] '>
-              <HiLocationMarker className=""/>
+              <HiLocationMarker className="text-[2rem]"/>
               <p>{item?.location}</p>
             </div>
               
