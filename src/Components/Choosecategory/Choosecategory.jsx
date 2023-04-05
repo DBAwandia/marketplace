@@ -31,8 +31,8 @@ function Choosecategory() {
             <li className='hover:text-[#fffefe] hover:font-extrabold' onClick={()=>handleClick("Oppo")}>
                 Oppo
             </li>
-            <li className='hover:text-[#fffefe] hover:font-extrabold' onClick={()=>handleClick("Realmi")}>
-                Realmi
+            <li className='hover:text-[#fffefe] hover:font-extrabold' onClick={()=>handleClick("Realme")}>
+                Realme
             </li>
             <li className='hover:text-[#fffefe] hover:font-extrabold' onClick={()=>handleClick("HTC")}>
                 HTC

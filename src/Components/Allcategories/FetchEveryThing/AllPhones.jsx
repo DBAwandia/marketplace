@@ -109,7 +109,7 @@ function AllPhones() {
             draggable
             pauseOnHover
         />
-      <div className='sticky top-0 z-[99999999999999999999999]'>
+      <div className='sticky top-0 z-[99999999]'>
         <Navbar/>
       </div>
       {loading && 

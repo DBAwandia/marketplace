@@ -78,28 +78,28 @@ function Navbar() {
             onClick={()=>{
               navigate("/wishlist")
             }}
-            className='flex items-center text-[2rem] gap-[1rem] hover:text-[#b9b6b6]'
+            className='flex items-center text-[2rem] gap-[1rem] hover:text-[#ffffff]'
         >
             <BsBookmarkFill className='text-[3rem]'/>
             <p>Wishlist</p>
         </div>
         <div 
           onClick={navigateToChat}
-          className='relative flex items-center text-[2rem] gap-[1rem] hover:text-[#b9b6b6]'
+          className='relative flex items-center text-[2rem] gap-[1rem] hover:text-[#ffffff]'
         >
             <div className='absolute top-[-0.5rem] right-[10.3rem] shadow-xl z-[9999999999] w-[30px] h-[30px] bg-[#fea03c] rounded-full'></div>
             <BiMessageDetail className='text-[3rem]'/>
             <p>Messages</p>
         </div>
         <div 
-          className='flex items-center text-[2rem] gap-[1rem] hover:text-[#b9b6b6]'
+          className='flex items-center text-[2rem] gap-[1rem] hover:text-[#ffffff]'
           onClick={postAd}
         >
             <p>Post</p>
             <RiAdvertisementFill className='text-[3rem]'/>
         </div>
         <div 
-          className='text-[2rem] hover:text-[#b9b6b6]'
+          className='text-[2rem] hover:text-[#ffffff]'
           onClick={()=>{dispatch({type:"OPEN"})}}
         >
             <VscAccount className='text-[3rem]'/>

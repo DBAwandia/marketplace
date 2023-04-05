@@ -89,7 +89,7 @@ function Wishlist() {
                 >
                     <LazyLoadImage
                         effect='blur' 
-                        className='w-[1200px] h-[355px] object-cover'
+                        className='w-[1200px] h-[500px] object-cover'
                         src={item?.image} 
                         alt='image phoneplace' 
                     />

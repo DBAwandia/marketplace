@@ -97,7 +97,7 @@ function MyPostAds() {
                 <div className='flex-[0.4]'>
                     <LazyLoadImage
                         effect='blur' 
-                        className='w-[1200px] h-[355px] object-cover'
+                        className='w-[1200px] h-[505px] object-cover'
                         src={item?.image} 
                         alt='image phoneplace' 
                     />
